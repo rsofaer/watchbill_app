@@ -1,0 +1,2 @@
+class WorkerQualification < ApplicationRecord
+end

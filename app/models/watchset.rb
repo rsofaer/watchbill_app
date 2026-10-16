@@ -1,0 +1,2 @@
+class Watchset < ApplicationRecord
+end

@@ -1,0 +1,2 @@
+class Watchstation < ApplicationRecord
+end
