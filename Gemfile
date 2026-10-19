@@ -63,6 +63,8 @@ group :test do
   # Use system testing [https://guides.rubyonrails.org/testing.html#system-testing]
   gem "capybara"
   gem "selenium-webdriver"
+  gem "cucumber-rails", "~> 4.1", require: false
+  gem "database_cleaner"
 end
 
 gem "datagrid", "~> 2.0"
@@ -70,3 +72,5 @@ gem "kaminari"
 
 gem "cssbundling-rails"
 gem "rackup"
+
+
