@@ -1,5 +1,8 @@
 <%= datagrid_form_with model: @grid, url: watchsets_path %>
 
+<% content_for :navtitle do %>
+  Your Watchbills
+<% end %>
 <%= paginate(@grid.assets) %>
 <%= datagrid_table @grid %>
 <%= paginate(@grid.assets) %>

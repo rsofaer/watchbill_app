@@ -67,3 +67,6 @@ end
 
 gem "datagrid", "~> 2.0"
 gem "kaminari"
+
+gem "cssbundling-rails"
+gem "rackup"
