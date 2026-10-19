@@ -1,0 +1,145 @@
+/* Table */
+
+table.datagrid-table {
+  background-color: transparent;
+  border-collapse: collapse;
+  max-width: 100%;
+}
+
+table.datagrid-table th {
+  background-color: #eee;
+  text-align: left;
+  vertical-align: top;
+}
+
+table.datagrid-table td,
+table.datagrid-table th {
+  border: 1px solid #d6d6d6;
+  padding: 5px 10px;
+}
+
+.datagrid-order-control-asc,
+.datagrid-order-control-desc {
+  text-decoration: none;
+  font-weight: normal;
+}
+
+.datagrid-order-active-asc,
+.datagrid-order-active-desc {
+  background-color: #fff7d5;
+}
+
+.datagrid-order-active-asc a.datagrid-order-control-asc,
+.datagrid-order-active-desc a.datagrid-order-control-desc {
+  font-weight: bold;
+  color: #d00;
+}
+
+.datagrid-no-results {
+  text-align: center;
+}
+
+/* Form */
+
+.datagrid-form {
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  padding: 20px;
+}
+
+.datagrid-filter {
+  margin: 10px;
+}
+
+.datagrid-filter label {
+  width: 150px;
+  display: inline-block;
+}
+
+.datagrid-filter input, .datagrid-filter select {
+  border: 2px solid #ccc;
+  border-radius: 4px;
+  display: inline-block;
+  padding: 5px 12px;
+  width: 300px;
+}
+
+input.datagrid-range-from, input.datagrid-range-to {
+  width: 138px;
+}
+
+.datagrid-filter select[multiple] {
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  height: 100px;
+}
+
+select.datagrid-dynamic-field {
+  width: 228px
+}
+
+select.datagrid-dynamic-operation {
+  margin-left: 7px;
+  width: 60px;
+}
+
+.datagrid-dynamic-value {
+  margin: 10px 0 0 154px;
+}
+
+.datagrid-range-separator {
+  display: inline-block;
+  margin: 6px 4px 0;
+}
+
+.datagrid-enum-checkboxes {
+  display: inline-block;
+}
+
+.datagrid-enum-checkboxes input {
+  margin: 7px;
+  width: auto;
+}
+
+.datagrid-enum-checkboxes label {
+  display: block;
+  width: 100%;
+}
+
+.datagrid-actions {
+  padding-left: calc(150px + 10px);
+}
+
+.datagrid-submit {
+  background-color: #555;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+  line-height: normal;
+  padding: 7px 15px;
+  vertical-align: middle;
+  display: inline-block;
+  zoom: 1;
+  *display: inline;
+}
+
+.datagrid-submit:hover,
+.datagrid-submit:focus {
+  background-color: #333;
+}
+
+.datagrid-submit:active {
+  background-color: #000;
+}
+
+.datagrid-reset {
+  font-size: 14px;
+  padding: 7px 15px;
+  vertical-align: middle;
+  display: inline-block;
+  zoom: 1;
+  *display: inline;
+}

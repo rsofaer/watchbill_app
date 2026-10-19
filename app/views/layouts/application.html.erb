@@ -9,6 +9,7 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
+    <%= render "layouts/navbar" %>
     <%= yield :head %>
 
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
@@ -17,6 +18,8 @@
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
+    <%= favicon_link_tag asset_path('favicon.png'), rel: 'icon', type: 'image/png' %>
+
 
     <%# Includes all stylesheet files in app/assets/stylesheets %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
@@ -24,6 +27,8 @@
   </head>
 
   <body>
-    <%= yield %>
+    <main class="container mx-auto mt-28 px-5 flex">
+      <%= yield %>
+    </main>
   </body>
 </html>
