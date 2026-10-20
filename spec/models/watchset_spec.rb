@@ -58,6 +58,14 @@ RSpec.describe Watchset do
       expect(watchset.workers.distinct.to_a).to eq([ worker ])
     end
 
+    it "carries the watchbills saved for it" do
+      watchset = create(:watchset)
+      bills = create_list(:watchbill, 2, watchset: watchset)
+      create(:watchbill)
+
+      expect(watchset.watchbills).to match_array(bills)
+    end
+
     it "carries many watchstations" do
       watchset = create(:watchset)
       stations = create_list(:watchstation, 30, watchset: watchset)

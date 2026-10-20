@@ -26,6 +26,8 @@ matcher:
     - WorkersController*
     - WorkerQualificationsController*
     - WorkersGrid*
+    - WatchbillsController*
+    - WatchbillsGrid*
 
 hooks:
   - config/mutant/hooks.rb

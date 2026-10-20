@@ -1,7 +1,9 @@
 Rails.application.routes.draw do
   resources :watchsets, only: [ :index, :show, :new, :create, :edit ] do
     resources :watchstations, only: [ :create, :destroy ]
+    resources :watchbills, only: [ :index, :create ]
   end
+  resources :watchbills, only: [ :show ]
   resources :workers, only: [ :index, :show, :new, :create ] do
     resources :worker_qualifications, only: [ :create, :destroy ]
   end

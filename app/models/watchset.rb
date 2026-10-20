@@ -1,5 +1,6 @@
 class Watchset < ApplicationRecord
   has_many :watchstations
+  has_many :watchbills
   has_many :qualifications, through: :watchstations
   has_many :workers, through: :qualifications
 

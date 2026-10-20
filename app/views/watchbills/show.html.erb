@@ -1,0 +1,23 @@
+<% content_for :navtitle do %>
+  <%= link_to @watchset.name, watchset_path(@watchset) %>: Watchbill #<%= @watchbill.id %>
+<% end %>
+<% problems = @watchbill.staffing_problems %>
+<% if problems.empty? %>
+  <div class="alert alert-success watchbill-status">This watchbill is valid.</div>
+<% else %>
+  <div class="alert alert-danger watchbill-status">
+    This watchbill is not valid.
+    <ul class="watchbill-problems">
+      <% problems.each do |problem| %>
+        <li><%= problem %></li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
+<p>
+  Saved <%= @watchbill.created_at.strftime("%m/%d/%Y %H:%M") %>.
+  <%= link_to "All saved watchbills", watchset_watchbills_path(@watchset) %>
+</p>
+<%= paginate(@grid.assets) %>
+<%= datagrid_table @grid %>
+<%= paginate(@grid.assets) %>

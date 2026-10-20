@@ -1,0 +1,6 @@
+<% content_for :navtitle do %>
+  Saved watchbills for <%= link_to @watchset.name, watchset_path(@watchset) %>
+<% end %>
+<%= paginate(@grid.assets) %>
+<%= datagrid_table @grid %>
+<%= paginate(@grid.assets) %>

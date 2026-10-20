@@ -31,9 +31,13 @@ RSpec.describe WatchbillStationAssignment do
       end
     end
 
+    # A shift arrives from the save form as a string, so a bad one is a
+    # validation error the controller can report rather than an exception.
     it "rejects a shift that is not one of the three" do
-      expect { create(:watchbill_station_assignment, shift: "Graveyard") }
-        .to raise_error(ArgumentError, /Graveyard/)
+      assignment = build(:watchbill_station_assignment, shift: "Graveyard")
+
+      expect(assignment).not_to be_valid
+      expect(assignment.errors[:shift]).to be_present
     end
   end
 end

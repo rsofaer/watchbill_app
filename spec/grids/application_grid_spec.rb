@@ -17,7 +17,19 @@ RSpec.describe ApplicationGrid do
         date_column(:created_at)
         date_column(:derived) { |watchset| watchset.created_at }
         date_column(:missing) { nil }
+        date_column(:headed, header: "Saved on") { |watchset| watchset.created_at }
+        date_column(:queried, "'2026-03-07'")
       end
+    end
+
+    it "passes a query through to datagrid" do
+      watchset = create(:watchset)
+
+      expect(grid_class.new.data_value(:queried, grid_class.new.assets.find(watchset.id))).to eq("2026-03-07")
+    end
+
+    it "passes column options through to datagrid" do
+      expect(grid_class.new.column_by_name(:headed).header).to eq("Saved on")
     end
 
     it "keeps the underlying value in the data representation" do
@@ -58,7 +70,19 @@ RSpec.describe ApplicationGrid do
         scope { Worker }
         boolean_column(:qualified) { |worker| worker.qualifications.any? }
         boolean_column(:name)
+        boolean_column(:headed, header: "Valid") { true }
+        boolean_column(:queried, "0")
       end
+    end
+
+    it "passes a query through to datagrid" do
+      worker = create(:worker)
+
+      expect(grid_class.new.data_value(:queried, grid_class.new.assets.find(worker.id))).to eq("Yes")
+    end
+
+    it "passes column options through to datagrid" do
+      expect(grid_class.new.column_by_name(:headed).header).to eq("Valid")
     end
 
     it "renders Yes for a truthy value" do
