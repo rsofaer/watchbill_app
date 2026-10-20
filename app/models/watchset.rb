@@ -3,6 +3,8 @@ class Watchset < ApplicationRecord
   has_many :qualifications, through: :watchstations
   has_many :workers, through: :qualifications
 
+  validates :name, presence: true
+
   def generate_watchbill
     # We want a Watchbill object, not saved
     # For which each watchstation has been assigned a 
