@@ -34,3 +34,11 @@ end
 Given('a qualification named {string}') do |name|
   Qualification.create!(name: name)
 end
+
+Given('a worker named {string}') do |name|
+  Worker.create!(name: name)
+end
+
+Given('a worker named {string} qualified as {string}') do |name, qualification_name|
+  Worker.create!(name: name).qualifications << Qualification.find_by!(name: qualification_name)
+end

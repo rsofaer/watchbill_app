@@ -73,3 +73,15 @@ end
 Then('I should not see the watchstation {string}') do |name|
   expect(page).not_to have_css("table.watchstations tbody tr", text: name)
 end
+
+When('I am on the worker list') do
+  visit workers_path
+end
+
+When('I am on the new worker page') do
+  visit new_worker_path
+end
+
+When('I am on the worker page for {string}') do |name|
+  visit worker_path(Worker.find_by!(name: name))
+end

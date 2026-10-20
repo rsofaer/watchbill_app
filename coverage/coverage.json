@@ -9,9 +9,9 @@
       "RSpec"
     ],
     "project_name": "Merge t",
-    "timestamp": "2026-10-20T01:55:16.124-04:00",
+    "timestamp": "2026-10-20T01:55:56.370-04:00",
     "root": "/Users/raphael/workspace/esaas/watchbill_worktrees/merge_t",
-    "commit": "4100b9505d91c18a584236a6d31de9688f38aff9",
+    "commit": "47b25428cf2c2d150ecff62e5fc30b244b2bed30",
     "primary_coverage": "line",
     "line_coverage": true,
     "branch_coverage": true,
@@ -19,19 +19,19 @@
   },
   "total": {
     "lines": {
-      "covered": 171,
+      "covered": 215,
       "missed": 4,
-      "omitted": 168,
-      "total": 175,
-      "percent": 97.71428571428571,
-      "strength": 103.15428571428572
+      "omitted": 203,
+      "total": 219,
+      "percent": 98.17351598173516,
+      "strength": 83.70776255707763
     },
     "branches": {
-      "covered": 28,
+      "covered": 32,
       "missed": 0,
-      "total": 28,
+      "total": 32,
       "percent": 100.0,
-      "strength": 30.785714285714285
+      "strength": 27.28125
     }
   },
   "coverage": {
@@ -363,6 +363,200 @@
       "missed_branches": 0,
       "total_branches": 5
     },
+    "app/controllers/worker_qualifications_controller.rb": {
+      "source": [
+        "class WorkerQualificationsController < ApplicationController",
+        "  before_action :set_worker",
+        "",
+        "  def create",
+        "    worker_qualification = @worker.worker_qualifications.build(",
+        "      qualification_id: params.expect(worker_qualification: :qualification_id).fetch(:qualification_id)",
+        "    )",
+        "    if worker_qualification.save",
+        "      flash[:notice] = \"Added #{worker_qualification.qualification.name}.\"",
+        "    else",
+        "      flash[:error] = \"Could not add qualification: #{worker_qualification.errors.full_messages.to_sentence}.\"",
+        "    end",
+        "    redirect_to @worker",
+        "  end",
+        "",
+        "  def destroy",
+        "    worker_qualification = @worker.worker_qualifications.find(params.fetch(:id))",
+        "    worker_qualification.destroy!",
+        "    flash[:notice] = \"Removed #{worker_qualification.qualification.name}.\"",
+        "    redirect_to @worker",
+        "  end",
+        "",
+        "  protected",
+        "",
+        "  def set_worker",
+        "    @worker = Worker.find(params.fetch(:worker_id))",
+        "  end",
+        "end"
+      ],
+      "lines": [
+        2,
+        2,
+        null,
+        2,
+        7,
+        null,
+        null,
+        6,
+        4,
+        null,
+        2,
+        null,
+        6,
+        null,
+        null,
+        2,
+        4,
+        3,
+        3,
+        3,
+        null,
+        null,
+        2,
+        null,
+        2,
+        12,
+        null,
+        null
+      ],
+      "lines_covered_percent": 100.0,
+      "covered_lines": 16,
+      "missed_lines": 0,
+      "omitted_lines": 12,
+      "total_lines": 16,
+      "branches": [
+        {
+          "type": "then",
+          "start_line": 9,
+          "end_line": 9,
+          "coverage": 4,
+          "inline": false,
+          "report_line": 8
+        },
+        {
+          "type": "else",
+          "start_line": 11,
+          "end_line": 11,
+          "coverage": 2,
+          "inline": false,
+          "report_line": 10
+        }
+      ],
+      "branches_covered_percent": 100.0,
+      "covered_branches": 2,
+      "missed_branches": 0,
+      "total_branches": 2
+    },
+    "app/controllers/workers_controller.rb": {
+      "source": [
+        "class WorkersController < ApplicationController",
+        "  def index",
+        "    @grid = WorkersGrid.new(grid_params) do |scope|",
+        "      scope.page(params[:page])",
+        "    end",
+        "  end",
+        "",
+        "  def show",
+        "    @worker = Worker.find(params.fetch(:id))",
+        "    @available_qualifications = Qualification.where.not(id: @worker.qualification_ids).order(:name)",
+        "  end",
+        "",
+        "  def new",
+        "    @worker = Worker.new",
+        "  end",
+        "",
+        "  def create",
+        "    @worker = Worker.new(worker_params)",
+        "    if @worker.save",
+        "      flash[:notice] = \"Added #{@worker.name}.\"",
+        "      redirect_to @worker",
+        "    else",
+        "      render :new, status: :unprocessable_content",
+        "    end",
+        "  end",
+        "",
+        "  protected",
+        "",
+        "  def worker_params",
+        "    params.expect(worker: :name)",
+        "  end",
+        "",
+        "  def grid_params",
+        "    params.fetch(:workers_grid, {}).permit!",
+        "  end",
+        "end"
+      ],
+      "lines": [
+        2,
+        2,
+        8,
+        24,
+        null,
+        null,
+        null,
+        2,
+        10,
+        9,
+        null,
+        null,
+        2,
+        3,
+        null,
+        null,
+        2,
+        6,
+        5,
+        3,
+        3,
+        null,
+        2,
+        null,
+        null,
+        null,
+        2,
+        null,
+        2,
+        6,
+        null,
+        null,
+        2,
+        8,
+        null,
+        null
+      ],
+      "lines_covered_percent": 100.0,
+      "covered_lines": 20,
+      "missed_lines": 0,
+      "omitted_lines": 16,
+      "total_lines": 20,
+      "branches": [
+        {
+          "type": "then",
+          "start_line": 20,
+          "end_line": 21,
+          "coverage": 3,
+          "inline": false,
+          "report_line": 19
+        },
+        {
+          "type": "else",
+          "start_line": 23,
+          "end_line": 23,
+          "coverage": 2,
+          "inline": false,
+          "report_line": 22
+        }
+      ],
+      "branches_covered_percent": 100.0,
+      "covered_branches": 2,
+      "missed_branches": 0,
+      "total_branches": 2
+    },
     "app/grids/application_grid.rb": {
       "source": [
         "class ApplicationGrid < Datagrid::Base",
@@ -693,6 +887,44 @@
       "missed_lines": 0,
       "omitted_lines": 8,
       "total_lines": 11,
+      "branches": [],
+      "branches_covered_percent": 100.0,
+      "covered_branches": 0,
+      "missed_branches": 0,
+      "total_branches": 0
+    },
+    "app/grids/workers_grid.rb": {
+      "source": [
+        "class WorkersGrid < ApplicationGrid",
+        "",
+        "  scope do",
+        "    Worker.includes(:qualifications)",
+        "  end",
+        "",
+        "  column(:name, html: ->(name, worker) { link_to name, worker_path(worker) })",
+        "  column(:qualifications, order: false) do |worker|",
+        "    worker.qualifications.map(&:name).sort.join(\", \")",
+        "  end",
+        "end"
+      ],
+      "lines": [
+        2,
+        null,
+        2,
+        31,
+        null,
+        null,
+        37,
+        2,
+        37,
+        null,
+        null
+      ],
+      "lines_covered_percent": 100.0,
+      "covered_lines": 6,
+      "missed_lines": 0,
+      "omitted_lines": 5,
+      "total_lines": 6,
       "branches": [],
       "branches_covered_percent": 100.0,
       "covered_branches": 0,
@@ -1177,21 +1409,25 @@
     "app/models/worker.rb": {
       "source": [
         "class Worker < ApplicationRecord",
-        "  has_many :worker_qualifications",
+        "  has_many :worker_qualifications, dependent: :destroy",
         "  has_many :qualifications, through: :worker_qualifications",
+        "",
+        "  validates :name, presence: true",
         "end"
       ],
       "lines": [
         2,
         2,
         2,
+        null,
+        2,
         null
       ],
       "lines_covered_percent": 100.0,
-      "covered_lines": 3,
+      "covered_lines": 4,
       "missed_lines": 0,
-      "omitted_lines": 1,
-      "total_lines": 3,
+      "omitted_lines": 2,
+      "total_lines": 4,
       "branches": [],
       "branches_covered_percent": 100.0,
       "covered_branches": 0,
@@ -1203,19 +1439,23 @@
         "class WorkerQualification < ApplicationRecord",
         "  belongs_to :worker",
         "  belongs_to :qualification",
+        "",
+        "  validates :qualification, uniqueness: { scope: :worker }",
         "end"
       ],
       "lines": [
         2,
         2,
         2,
+        null,
+        2,
         null
       ],
       "lines_covered_percent": 100.0,
-      "covered_lines": 3,
+      "covered_lines": 4,
       "missed_lines": 0,
-      "omitted_lines": 1,
-      "total_lines": 3,
+      "omitted_lines": 2,
+      "total_lines": 4,
       "branches": [],
       "branches_covered_percent": 100.0,
       "covered_branches": 0,
@@ -1226,24 +1466,26 @@
   "groups": {
     "Controllers": {
       "lines": {
-        "covered": 59,
+        "covered": 95,
         "missed": 0,
-        "omitted": 44,
-        "total": 59,
+        "omitted": 72,
+        "total": 95,
         "percent": 100.0,
-        "strength": 8.491525423728813
+        "strength": 7.010526315789473
       },
       "branches": {
-        "covered": 9,
+        "covered": 13,
         "missed": 0,
-        "total": 9,
+        "total": 13,
         "percent": 100.0,
-        "strength": 2.6666666666666665
+        "strength": 2.6923076923076925
       },
       "files": [
         "app/controllers/application_controller.rb",
         "app/controllers/watchsets_controller.rb",
-        "app/controllers/watchstations_controller.rb"
+        "app/controllers/watchstations_controller.rb",
+        "app/controllers/worker_qualifications_controller.rb",
+        "app/controllers/workers_controller.rb"
       ]
     },
     "Helpers": {
@@ -1308,12 +1550,12 @@
     },
     "Models": {
       "lines": {
-        "covered": 75,
+        "covered": 77,
         "missed": 0,
-        "omitted": 61,
-        "total": 75,
+        "omitted": 63,
+        "total": 77,
         "percent": 100.0,
-        "strength": 15.746666666666666
+        "strength": 15.38961038961039
       },
       "branches": {
         "covered": 6,
@@ -1335,12 +1577,12 @@
     },
     "Ungrouped": {
       "lines": {
-        "covered": 36,
+        "covered": 42,
         "missed": 0,
-        "omitted": 55,
-        "total": 36,
+        "omitted": 60,
+        "total": 42,
         "percent": 100.0,
-        "strength": 454.6666666666667
+        "strength": 392.35714285714283
       },
       "branches": {
         "covered": 13,
@@ -1352,7 +1594,8 @@
       "files": [
         "app/grids/application_grid.rb",
         "app/grids/watchset_grid.rb",
-        "app/grids/watchsets_grid.rb"
+        "app/grids/watchsets_grid.rb",
+        "app/grids/workers_grid.rb"
       ]
     }
   },
@@ -4347,6 +4590,240 @@
           "branch": 100.0
         },
         "app/grids/watchsets_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/application_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/jobs/application_job.rb": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "app/mailers/application_mailer.rb": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "app/models/application_record.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/qualification.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/watchbill.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/watchbill_station_assignment.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/watchset.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/watchstation.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/worker.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/worker_qualification.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      }
+    },
+    {
+      "created_at": "2026-10-20T05:55:49Z",
+      "branch": "merge_t",
+      "commit": "47b25428cf2c2d150ecff62e5fc30b244b2bed30",
+      "totals": {
+        "line": 98.17,
+        "branch": 100.0
+      },
+      "groups": {
+        "Controllers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Helpers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Jobs": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "Mailers": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "Models": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Ungrouped": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      },
+      "files": {
+        "app/controllers/application_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/watchsets_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/watchstations_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/worker_qualifications_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/workers_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/application_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/watchset_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/watchsets_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/workers_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/application_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/jobs/application_job.rb": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "app/mailers/application_mailer.rb": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "app/models/application_record.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/qualification.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/watchbill.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/watchbill_station_assignment.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/watchset.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/watchstation.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/worker.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/worker_qualification.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      }
+    },
+    {
+      "created_at": "2026-10-20T05:55:56Z",
+      "branch": "merge_t",
+      "commit": "47b25428cf2c2d150ecff62e5fc30b244b2bed30",
+      "totals": {
+        "line": 98.17,
+        "branch": 100.0
+      },
+      "groups": {
+        "Controllers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Helpers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Jobs": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "Mailers": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "Models": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Ungrouped": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      },
+      "files": {
+        "app/controllers/application_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/watchsets_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/watchstations_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/worker_qualifications_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/workers_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/application_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/watchset_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/watchsets_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/workers_grid.rb": {
           "line": 100.0,
           "branch": 100.0
         },

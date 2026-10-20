@@ -2,6 +2,9 @@ Rails.application.routes.draw do
   resources :watchsets, only: [ :index, :show, :new, :create, :edit ] do
     resources :watchstations, only: [ :create, :destroy ]
   end
+  resources :workers, only: [ :index, :show, :new, :create ] do
+    resources :worker_qualifications, only: [ :create, :destroy ]
+  end
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

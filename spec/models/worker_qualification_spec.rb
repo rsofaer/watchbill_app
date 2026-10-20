@@ -21,4 +21,18 @@ RSpec.describe WorkerQualification do
     expect(record.worker).to be_a(Worker)
     expect(record.qualification).to be_a(Qualification)
   end
+
+  it "will not give a worker the same qualification twice" do
+    existing = create(:worker_qualification)
+    duplicate = described_class.new(worker: existing.worker, qualification: existing.qualification)
+
+    expect(duplicate).not_to be_valid
+    expect(duplicate.errors[:qualification]).to be_present
+  end
+
+  it "lets different workers hold the same qualification" do
+    existing = create(:worker_qualification)
+
+    expect(described_class.new(worker: create(:worker), qualification: existing.qualification)).to be_valid
+  end
 end

@@ -3039,6 +3039,240 @@
             "branch": 100.0
           }
         }
+      },
+      {
+        "created_at": "2026-10-20T05:55:49Z",
+        "branch": "merge_t",
+        "commit": "47b25428cf2c2d150ecff62e5fc30b244b2bed30",
+        "totals": {
+          "line": 98.17,
+          "branch": 100.0
+        },
+        "groups": {
+          "Controllers": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "Helpers": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "Jobs": {
+            "line": 0.0,
+            "branch": 100.0
+          },
+          "Mailers": {
+            "line": 0.0,
+            "branch": 100.0
+          },
+          "Models": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "Ungrouped": {
+            "line": 100.0,
+            "branch": 100.0
+          }
+        },
+        "files": {
+          "app/controllers/application_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/controllers/watchsets_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/controllers/watchstations_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/controllers/worker_qualifications_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/controllers/workers_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/grids/application_grid.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/grids/watchset_grid.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/grids/watchsets_grid.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/grids/workers_grid.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/helpers/application_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/jobs/application_job.rb": {
+            "line": 0.0,
+            "branch": 100.0
+          },
+          "app/mailers/application_mailer.rb": {
+            "line": 0.0,
+            "branch": 100.0
+          },
+          "app/models/application_record.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/qualification.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/watchbill.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/watchbill_station_assignment.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/watchset.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/watchstation.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/worker.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/worker_qualification.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          }
+        }
+      },
+      {
+        "created_at": "2026-10-20T05:55:56Z",
+        "branch": "merge_t",
+        "commit": "47b25428cf2c2d150ecff62e5fc30b244b2bed30",
+        "totals": {
+          "line": 98.17,
+          "branch": 100.0
+        },
+        "groups": {
+          "Controllers": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "Helpers": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "Jobs": {
+            "line": 0.0,
+            "branch": 100.0
+          },
+          "Mailers": {
+            "line": 0.0,
+            "branch": 100.0
+          },
+          "Models": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "Ungrouped": {
+            "line": 100.0,
+            "branch": 100.0
+          }
+        },
+        "files": {
+          "app/controllers/application_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/controllers/watchsets_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/controllers/watchstations_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/controllers/worker_qualifications_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/controllers/workers_controller.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/grids/application_grid.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/grids/watchset_grid.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/grids/watchsets_grid.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/grids/workers_grid.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/helpers/application_helper.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/jobs/application_job.rb": {
+            "line": 0.0,
+            "branch": 100.0
+          },
+          "app/mailers/application_mailer.rb": {
+            "line": 0.0,
+            "branch": 100.0
+          },
+          "app/models/application_record.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/qualification.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/watchbill.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/watchbill_station_assignment.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/watchset.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/watchstation.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/worker.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          },
+          "app/models/worker_qualification.rb": {
+            "line": 100.0,
+            "branch": 100.0
+          }
+        }
       }
     ]
   }
