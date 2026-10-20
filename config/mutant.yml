@@ -11,6 +11,18 @@ environment_variables:
 integration:
   name: rspec
 
+matcher:
+  subjects:
+    - ApplicationController*
+    - ApplicationGrid*
+    - ApplicationRecord*
+    - Qualification*
+    - Watchbill*
+    - Watchset*
+    - Watchstation*
+    - Worker*
+    - WatchsetsController*
+
 hooks:
   - config/mutant/hooks.rb
 

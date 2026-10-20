@@ -38,3 +38,6 @@
 !/app/assets/builds/.keep
 
 /node_modules
+
+# Mutation testing session results (bundle exec mutant run)
+/.mutant/

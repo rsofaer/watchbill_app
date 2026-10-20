@@ -1,6 +1,10 @@
 require "rails_helper"
 
-RSpec.describe "Watchsets" do
+# `mutant_expression` binds these examples to the controller for mutation
+# testing. Without it mutant derives the subject from the first word of the
+# description -- "Watchsets" -- which matches no class, so every
+# WatchsetsController mutation is reported alive against zero tests.
+RSpec.describe "Watchsets", mutant_expression: "WatchsetsController*" do
   describe "GET /watchsets" do
     context "with no watchsets" do
       it "responds successfully" do
