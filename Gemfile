@@ -68,6 +68,7 @@ group :test do
   gem "selenium-webdriver"
   gem "cucumber-rails", "~> 4.1", require: false
   gem "database_cleaner"
+  gem "rspec-expectations"
 end
 
 gem "datagrid", "~> 2.0"
@@ -75,3 +76,5 @@ gem "kaminari"
 
 gem "cssbundling-rails"
 gem "rackup"
+
+gem "z3", github: "taw/z3" #"~> 0.0.20260727"

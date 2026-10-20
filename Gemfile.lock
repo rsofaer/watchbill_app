@@ -1,3 +1,10 @@
+GIT
+  remote: https://github.com/taw/z3.git
+  revision: d60385ac6c7f9eb226d2738ae8b183be4f91f3a5
+  specs:
+    z3 (0.0.20260727)
+      ffi (~> 1.17)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -341,6 +348,10 @@ GEM
     regexp_parser (2.13.1)
     reline (0.7.0)
       io-console (~> 0.5)
+    rspec-expectations (3.13.5)
+      diff-lcs (>= 1.2.0, < 2.0)
+      rspec-support (~> 3.13.0)
+    rspec-support (3.13.7)
     rubocop (1.92.0)
       json (>= 2.3)
       language_server-protocol (~> 3.17.0.2)
@@ -480,6 +491,7 @@ DEPENDENCIES
   puma (>= 5.0)
   rackup
   rails (~> 8.1.4)
+  rspec-expectations
   rubocop-rails-omakase
   selenium-webdriver
   solid_cable
@@ -491,6 +503,7 @@ DEPENDENCIES
   turbo-rails
   tzinfo-data
   web-console
+  z3!
 
 BUNDLED WITH
    2.5.22

@@ -1,3 +1,4 @@
 class Qualification < ApplicationRecord
-  has_many :workers, through: :worker_qualification
+  has_many :worker_qualifications
+  has_many :workers, through: :worker_qualifications
 end

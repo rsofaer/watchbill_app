@@ -1,0 +1,6 @@
+<% content_for :navtitle do %>
+  <%= @watchset.name %>
+<% end %>
+<%= paginate(@grid.assets) %>
+<%= datagrid_table @grid %>
+<%= paginate(@grid.assets) %>

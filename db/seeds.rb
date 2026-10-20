@@ -7,7 +7,7 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
-Faker::Config.random = Random.new(42)
+Faker::Config.random = Random.new(43)
 
 quals = [
   ["Shift Supervisor",0.02], 
@@ -37,6 +37,14 @@ end
     end
   end
   w.save!
+end
+
+quals.each do |qt|
+  q = qt[2]
+  while q.workers.count < 4
+    q.workers << Worker.find_by!(id: Faker::Number.within(range: Worker.count))
+  end
+  q.save!
 end
 
 watchstations = [

@@ -17,6 +17,25 @@ ActiveRecord::Schema[8.1].define(version: 2026_10_16_162506) do
     t.string "name"
   end
 
+  create_table "watchbill_station_assignments", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "watchbill_id"
+    t.integer "watchstation_id"
+    t.integer "worker_id"
+    t.integer "shift", default: 0
+    t.index ["watchbill_id"], name: "index_watchbill_station_assignments_on_watchbill_id"
+    t.index ["watchstation_id"], name: "index_watchbill_station_assignments_on_watchstation_id"
+    t.index ["worker_id"], name: "index_watchbill_station_assignments_on_worker_id"
+  end
+
+  create_table "watchbills", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "watchset_id"
+    t.index ["watchset_id"], name: "index_watchbills_on_watchset_id"
+  end
+
   create_table "watchsets", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
