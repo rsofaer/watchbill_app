@@ -3,6 +3,8 @@ class Watchset < ApplicationRecord
   has_many :qualifications, through: :watchstations
   has_many :workers, through: :qualifications
 
+  validates :name, presence: true
+
   def generate_watchbill
     # We want a Watchbill object, not saved
     # For which each watchstation has been assigned a 
@@ -17,9 +19,9 @@ class Watchset < ApplicationRecord
     if workers.empty? || qualifications.empty? || watchstations.empty?
       return nil
     end
-    worker_sort = Z3::EnumSort.new("Workers", workers.distinct.map {|x| x.z3_id})
-    qual_sort = Z3::EnumSort.new("Qualifications", qualifications.distinct.map {|x| x.z3_id})
-    watch_sort = Z3::EnumSort.new("Watchstations", watchstations.map {|x| x.z3_id})
+    worker_sort = enum_sort("Workers", workers.distinct.map {|x| x.z3_id})
+    qual_sort = enum_sort("Qualifications", qualifications.distinct.map {|x| x.z3_id})
+    watch_sort = enum_sort("Watchstations", watchstations.map {|x| x.z3_id})
     shift_sort = Z3::EnumSort.new("Shift", WatchbillStationAssignment.shifts.keys)
 
     # And functions
@@ -100,6 +102,15 @@ class Watchset < ApplicationRecord
     else
       solver.unsat_core
     end
+  end
+
+  private
+
+  # Z3 enum sorts are registered process-wide by name, and redeclaring a name
+  # with different values raises. Watchsets differ (and change when edited),
+  # so derive the name from the values.
+  def enum_sort(name, values)
+    Z3::EnumSort.new("#{name}_#{Digest::SHA256.hexdigest(values.join(","))[0, 16]}", values)
   end
 
 

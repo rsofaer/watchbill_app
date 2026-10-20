@@ -7,6 +7,11 @@ class WatchsetsGrid < ApplicationGrid
   filter(:name, :integer)
   filter(:created_at, :date, range: true)
 
-  column(:name)
+  column(:name, html: true) do |watchset|
+    link_to watchset.name, watchset_path(watchset)
+  end
   date_column(:created_at)
+  column(:actions, header: "", html: true) do |watchset|
+    link_to "Edit", edit_watchset_path(watchset), class: "btn btn-sm btn-outline-secondary"
+  end
 end

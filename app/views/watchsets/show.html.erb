@@ -1,6 +1,10 @@
 <% content_for :navtitle do %>
   <%= @watchset.name %>
 <% end %>
+<%= link_to "Edit Watchset", edit_watchset_path(@watchset), class: "btn btn-outline-secondary my-2" %>
+<% if @watchbill.nil? && @watchset.watchstations.any? %>
+  <div class="alert alert-warning" role="alert">No valid watchbill could be generated for this watchset.</div>
+<% end %>
 <%= paginate(@grid.assets) %>
 <%= datagrid_table @grid %>
 <%= paginate(@grid.assets) %>
