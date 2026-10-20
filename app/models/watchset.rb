@@ -1,5 +1,6 @@
 class Watchset < ApplicationRecord
   has_many :watchstations
+  has_many :watchbills
   has_many :qualifications, through: :watchstations
   has_many :workers, through: :qualifications
 
@@ -85,16 +86,17 @@ class Watchset < ApplicationRecord
       Z3::Implies(Z3::And(assigned_worker[watch, shift] == worker, assigned_worker[watch2, shift2] == worker),
         Z3::And(watch == watch2, shift == shift2))))
 
-    puts solver.check
     if solver.satisfiable?
-      assignments = solver.model.func_interp(assigned_worker)
+      # func_interp omits the entries covered by the function's default value,
+      # so evaluate every station/shift pair against the model instead.
+      model = solver.model
       bill = Watchbill::build(watchset: self)
-      assignments.each do |input, worker|
-        station, shift = input
-        station_id = station.to_s.split("_").last.to_i
-        worker_id = worker.to_s.split("_").last.to_i
-        shift = shift.to_s
-        bill.watchbill_station_assignments.build(watchstation_id: station_id, shift: shift, worker_id: worker_id)
+      watchstations.each do |station|
+        WatchbillStationAssignment.shifts.each_key do |shift|
+          worker = model.model_eval(assigned_worker[station.z3_id, shift], true)
+          worker_id = worker.to_s.split("_").last.to_i
+          bill.watchbill_station_assignments.build(watchstation: station, shift: shift, worker_id: worker_id)
+        end
       end
       bill
     else
