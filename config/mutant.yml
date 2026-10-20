@@ -1,0 +1,17 @@
+requires:
+  - ./config/environment
+
+environment_variables:
+  RAILS_ENV: test
+  # Keeps spec/spec_helper.rb from starting SimpleCov. Mutant boots the suite
+  # hundreds of times across parallel workers; letting each one write to
+  # coverage/ just clobbers the report from the real `bin/rspec` run.
+  MUTANT: "true"
+
+integration:
+  name: rspec
+
+hooks:
+  - config/mutant/hooks.rb
+
+usage: opensource

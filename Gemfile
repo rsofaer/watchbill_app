@@ -47,6 +47,9 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'faker'
 
+  # Behaviour-driven testing [https://rspec.info]
+  gem "rspec-rails", "~> 8.0"
+
   # Audits gems for known security defects (use config/bundler-audit.yml to ignore issues)
   gem "bundler-audit", require: false
 
@@ -68,7 +71,6 @@ group :test do
   gem "selenium-webdriver"
   gem "cucumber-rails", "~> 4.1", require: false
   gem "database_cleaner"
-  gem "rspec-expectations"
   gem 'simplecov', require: false, group: :test
 end
 
@@ -79,3 +81,7 @@ gem "cssbundling-rails"
 gem "rackup"
 
 gem "z3", github: "taw/z3" #"~> 0.0.20260727"
+
+gem "mutant", "~> 0.17.0"
+
+gem "mutant-rspec", "~> 0.17.0"
