@@ -11,6 +11,7 @@ class WatchsetsController < ApplicationController
     @watchbill = @watchset.generate_watchbill
     if not @watchbill
       flash.now[:error] = "No valid watchbill exists for this watchset."
+      @watchbill = @watchset.watchbills.build
     end
     @grid = WatchsetGrid.new(grid_params(:watchset_grid).merge(watchbill: @watchbill)) do |scope|
       scope.page(params[:page])

@@ -16,8 +16,8 @@ class ApplicationGrid < Datagrid::Base
   #   date_column(:owner_registered_at) do |model|
   #     model.owner.registered_at
   #   end
-  def self.date_column(name, *args, &block)
-    column(name, *args) do |model|
+  def self.date_column(name, *args, **options, &block)
+    column(name, *args, **options) do |model|
       format(block ? block.call(model) : model.public_send(name)) do |date|
         date&.strftime("%m/%d/%Y") || "&mdash;".html_safe
       end
@@ -32,8 +32,8 @@ class ApplicationGrid < Datagrid::Base
   #   boolean_column(:has_tasks, preload: :tasks) do |model|
   #     model.tasks.unfinished.any?
   #   end
-  def self.boolean_column(name, *args, &block)
-    column(name, *args) do |model|
+  def self.boolean_column(name, *args, **options, &block)
+    column(name, *args, **options) do |model|
       value = block ? block.call(model) : model.public_send(name)
       value ? "Yes" : "No"
     end

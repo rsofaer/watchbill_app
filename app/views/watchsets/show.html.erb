@@ -2,8 +2,18 @@
   <%= @watchset.name %>
 <% end %>
 <%= link_to "Edit Watchset", edit_watchset_path(@watchset), class: "btn btn-outline-secondary my-2" %>
-<% if @watchbill.nil? && @watchset.watchstations.any? %>
+<% if @watchbill.watchbill_station_assignments.empty? && @watchset.watchstations.any? %>
   <div class="alert alert-warning" role="alert">No valid watchbill could be generated for this watchset.</div>
+<% end %>
+<% if @watchbill.watchbill_station_assignments.any? %>
+  <%= form_with model: [@watchset, @watchbill] do |f| %>
+    <%= f.fields_for :watchbill_station_assignments do |af| %>
+      <%= af.hidden_field :watchstation_id %>
+      <%= af.hidden_field :shift %>
+      <%= af.hidden_field :worker_id %>
+    <% end %>
+    <%= f.submit "Save Watchbill", class: "btn btn-primary" %>
+  <% end %>
 <% end %>
 <%= paginate(@grid.assets) %>
 <%= datagrid_table @grid %>
