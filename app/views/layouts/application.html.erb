@@ -28,6 +28,9 @@
 
   <body>
     <main class="container-fluid flex">
+      <% flash.each do |type, message| %>
+        <div class="alert <%= type.to_s == "error" ? "alert-danger" : "alert-success" %>"><%= message %></div>
+      <% end %>
       <%= yield %>
     </main>
   </body>

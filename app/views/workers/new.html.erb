@@ -1,0 +1,32 @@
+<% content_for :navtitle do %>
+  New Worker
+<% end %>
+<%= form_with model: @worker do |f| %>
+  <% if @worker.errors.any? %>
+    <div class="alert alert-danger">
+      <ul class="mb-0">
+        <% @worker.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="mb-3">
+    <%= f.label :name, class: "form-label" %>
+    <%= f.text_field :name, class: "form-control" %>
+  </div>
+
+  <fieldset class="mb-3">
+    <legend class="form-label">Qualifications</legend>
+    <%= f.collection_check_boxes :qualification_ids, Qualification.order(:name), :id, :name do |b| %>
+      <div class="form-check">
+        <%= b.check_box class: "form-check-input" %>
+        <%= b.label class: "form-check-label" %>
+      </div>
+    <% end %>
+  </fieldset>
+
+  <%= f.submit "Add Worker", class: "btn btn-primary" %>
+  <%= link_to "Cancel", workers_path, class: "btn btn-secondary" %>
+<% end %>
