@@ -31,3 +31,7 @@ end
 Given('there are no watchsets') do
   Watchset.delete_all
 end
+
+Given('a qualification named {string}') do |name|
+  Qualification.create!(name: name)
+end

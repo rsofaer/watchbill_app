@@ -19,9 +19,36 @@ class WatchsetsController < ApplicationController
     end
   end
 
+  def new
+    @watchset = Watchset.new
+  end
+
+  def create
+    @watchset = Watchset.new(watchset_params)
+    if @watchset.save
+      flash[:notice] = "Watchset created. Add its watchstations below."
+      redirect_to edit_watchset_path(@watchset)
+    else
+      render :new, status: :unprocessable_content
+    end
+  end
+
+  def edit
+    @watchset = Watchset.find_by(id: params.fetch(:id))
+    @watchstation = Watchstation.new
+    if not @watchset
+      flash[:error] = "Watchset not found."
+      redirect_to watchsets_path
+    end
+  end
+
   protected
 
   def grid_params
     params.fetch(:watchsets_grid, {}).permit!
+  end
+
+  def watchset_params
+    params.require(:watchset).permit(:name)
   end
 end

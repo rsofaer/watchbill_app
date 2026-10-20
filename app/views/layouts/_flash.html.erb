@@ -1,0 +1,5 @@
+<% { notice: "success", error: "danger" }.each do |type, style| %>
+  <% if flash[type] %>
+    <div class="alert alert-<%= style %>" role="alert"><%= flash[type] %></div>
+  <% end %>
+<% end %>
