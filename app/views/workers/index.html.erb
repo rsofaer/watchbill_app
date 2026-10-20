@@ -1,0 +1,7 @@
+<% content_for :navtitle do %>
+  Workers
+<% end %>
+<p><%= link_to "Add worker", new_worker_path, class: "btn btn-primary" %></p>
+<%= paginate(@grid.assets) %>
+<%= datagrid_table @grid %>
+<%= paginate(@grid.assets) %>

@@ -22,6 +22,9 @@ matcher:
     - Watchstation*
     - Worker*
     - WatchsetsController*
+    - WorkersController*
+    - WorkerQualificationsController*
+    - WorkersGrid*
 
 hooks:
   - config/mutant/hooks.rb

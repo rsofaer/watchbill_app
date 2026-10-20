@@ -19,4 +19,17 @@ RSpec.describe Worker do
 
     expect(worker.reload.qualifications).to match_array(qualifications)
   end
+
+  it "requires a name" do
+    worker = described_class.new(name: "")
+
+    expect(worker).not_to be_valid
+    expect(worker.errors[:name]).to be_present
+  end
+
+  it "takes its worker_qualifications with it when destroyed" do
+    worker = create(:worker, qualifications: [ create(:qualification) ])
+
+    expect { worker.destroy }.to change(WorkerQualification, :count).by(-1)
+  end
 end

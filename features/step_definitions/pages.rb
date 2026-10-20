@@ -36,3 +36,35 @@ end
 Then('I should see a link to add a watchstation.') do
   pending "the watchset page has no link for adding a watchstation yet"
 end
+
+When('I am on the worker list') do
+  visit workers_path
+end
+
+When('I am on the new worker page') do
+  visit new_worker_path
+end
+
+When('I am on the worker page for {string}') do |name|
+  visit worker_path(Worker.find_by!(name: name))
+end
+
+When('I follow {string}') do |link|
+  click_link link
+end
+
+When('I fill in {string} with {string}') do |field, value|
+  fill_in field, with: value
+end
+
+When('I select {string} from {string}') do |option, field|
+  select option, from: field
+end
+
+When('I press {string}') do |button|
+  click_button button
+end
+
+Then('I should see {string}') do |text|
+  expect(page).to have_content(text)
+end

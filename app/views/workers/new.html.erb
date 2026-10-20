@@ -1,0 +1,20 @@
+<% content_for :navtitle do %>
+  New Worker
+<% end %>
+<%= form_with model: @worker do |form| %>
+  <% if @worker.errors.any? %>
+    <div class="alert alert-danger">
+      <ul class="mb-0">
+        <% @worker.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+  <div class="mb-3">
+    <%= form.label :name, class: "form-label" %>
+    <%= form.text_field :name, class: "form-control" %>
+  </div>
+  <%= form.submit "Add worker", class: "btn btn-primary" %>
+  <%= link_to "Cancel", workers_path, class: "btn btn-link" %>
+<% end %>
