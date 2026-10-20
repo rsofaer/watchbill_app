@@ -26,25 +26,12 @@ quals.each do |q|
 end
 
 200.times do
-  w = Worker.build()
-  w.name = Faker::Name.name
-  if Worker.exists?(name: w.name)
-    next
-  end
-  quals.each do |q|
-    if Faker::Boolean.boolean(true_ratio: q[1])
-      w.qualifications << q[2]
-    end
-  end
-  w.save!
-end
-
-quals.each do |qt|
-  q = qt[2]
-  while q.workers.count < 4
-    q.workers << Worker.find_by!(id: Faker::Number.within(range: Worker.count))
-  end
-  q.save!
+  # Draw every random value before checking for an existing worker, so the
+  # seeded sequence (and thus the generated workers) is the same on every run
+  name = Faker::Name.name
+  worker_quals = quals.select { |q| Faker::Boolean.boolean(true_ratio: q[1]) }.map { |q| q[2] }
+  next if Worker.exists?(name: name)
+  Worker.create!(name: name, qualifications: worker_quals)
 end
 
 watchstations = [
@@ -60,8 +47,17 @@ watchstations = [
   ["Electrician", "Electrical Operator"],
 ]
 
-watchset = Watchset.create!(name: "Indian Point Normal Operations")
-watchstations.each do |station|
-  watchstation = Watchstation.create!(name: station[0], qualification: Qualification.find_by_name!(station[1]), watchset: watchset)
+# Each station needs a distinct qualified worker on every shift
+shift_count = WatchbillStationAssignment.shifts.size
+quals.each do |qt|
+  q = qt[2]
+  needed = watchstations.count { |station| station[1] == q.name } * shift_count + 1
+  while q.workers.count < needed
+    q.workers << Worker.where.not(id: q.workers).order(:id).offset(Faker::Number.between(from: 0, to: Worker.count - q.workers.count - 1)).first
+  end
 end
 
+watchset = Watchset.find_or_create_by!(name: "Indian Point Normal Operations")
+watchstations.each do |station|
+  Watchstation.find_or_create_by!(name: station[0], qualification: Qualification.find_by_name!(station[1]), watchset: watchset)
+end

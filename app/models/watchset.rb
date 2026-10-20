@@ -17,9 +17,9 @@ class Watchset < ApplicationRecord
     if workers.empty? || qualifications.empty? || watchstations.empty?
       return nil
     end
-    worker_sort = Z3::EnumSort.new("Workers", workers.distinct.map {|x| x.z3_id})
-    qual_sort = Z3::EnumSort.new("Qualifications", qualifications.distinct.map {|x| x.z3_id})
-    watch_sort = Z3::EnumSort.new("Watchstations", watchstations.map {|x| x.z3_id})
+    worker_sort = enum_sort("Workers", workers.distinct)
+    qual_sort = enum_sort("Qualifications", qualifications.distinct)
+    watch_sort = enum_sort("Watchstations", watchstations)
     shift_sort = Z3::EnumSort.new("Shift", WatchbillStationAssignment.shifts.keys)
 
     # And functions
@@ -85,22 +85,28 @@ class Watchset < ApplicationRecord
       Z3::Implies(Z3::And(assigned_worker[watch, shift] == worker, assigned_worker[watch2, shift2] == worker),
         Z3::And(watch == watch2, shift == shift2))))
 
-    puts solver.check
     if solver.satisfiable?
-      assignments = solver.model.func_interp(assigned_worker)
-      bill = Watchbill::build(watchset: self)
-      assignments.each do |input, worker|
-        station, shift = input
-        station_id = station.to_s.split("_").last.to_i
-        worker_id = worker.to_s.split("_").last.to_i
-        shift = shift.to_s
-        bill.watchbill_station_assignments.build(watchstation_id: station_id, shift: shift, worker_id: worker_id)
+      # Evaluate every (station, shift) pair explicitly: func_interp only lists
+      # explicit entries and folds one of them into its "else" default value.
+      model = solver.model
+      bill = Watchbill.new(watchset: self)
+      watchstations.each do |station|
+        WatchbillStationAssignment.shifts.each_key do |shift|
+          worker = model.model_eval(assigned_worker[station.z3_id, shift.to_sym], true)
+          worker_id = worker.to_s.split("_").last.to_i
+          bill.watchbill_station_assignments.build(watchstation: station, shift: shift, worker_id: worker_id)
+        end
       end
       bill
-    else
-      solver.unsat_core
     end
   end
 
+  private
 
+  # Z3 enum sorts are registered process-wide by name, and redeclaring a name
+  # with different values raises, so key each sort's name by its contents.
+  def enum_sort(name, records)
+    values = records.sort_by(&:id).map(&:z3_id)
+    Z3::EnumSort.new("#{name}_#{Digest::SHA1.hexdigest(values.join(","))}", values)
+  end
 end

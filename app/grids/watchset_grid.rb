@@ -5,17 +5,11 @@ class WatchsetGrid < ApplicationGrid
     Watchstation
   end
   column(:name, header: "Watchstation")
-  column(:worker_qualification_days, header: "Days") do |watchstation, grid|
-    assigned = grid.watchbill.watchbill_station_assignments.to_a.filter { |wsa| wsa.watchstation == watchstation && wsa.shift == "Days" }.first
-    assigned ? assigned.worker.name : nil
-  end
-  column(:worker_qualification_swings, header: "Swings") do |watchstation, grid|
-    assigned = grid.watchbill.watchbill_station_assignments.to_a.filter { |wsa| wsa.watchstation == watchstation && wsa.shift == "Swings" }.first
-    assigned ? assigned.worker.name : nil
-  end
-  column(:worker_qualification_mids, header: "Mids") do |watchstation, grid|
-    assigned = grid.watchbill.watchbill_station_assignments.to_a.filter { |wsa| wsa.watchstation == watchstation && wsa.shift == "Mids" }.first
-    assigned ? assigned.worker.name : nil
+  WatchbillStationAssignment.shifts.each_key do |shift|
+    column(:"worker_#{shift.downcase}", header: shift, order: false) do |watchstation, grid|
+      assigned = grid.watchbill&.watchbill_station_assignments&.find { |wsa| wsa.watchstation_id == watchstation.id && wsa.shift == shift }
+      assigned&.worker&.name
+    end
   end
 
 end

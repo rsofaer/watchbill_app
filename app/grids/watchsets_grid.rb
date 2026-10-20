@@ -4,7 +4,7 @@ class WatchsetsGrid < ApplicationGrid
     Watchset
   end
 
-  filter(:name, :integer)
+  filter(:name, :string)
   filter(:created_at, :date, range: true)
 
   column(:name)

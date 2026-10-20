@@ -6,3 +6,4 @@ A valid watchbill has one qualified worker per watchbill per shift.
 
 WatchbillApp uses Z3 to find valid sets of qualified workers.
 
+Use port 3002 to run rails server (`./bin/dev`).
