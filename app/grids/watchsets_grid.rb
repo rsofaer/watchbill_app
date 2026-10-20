@@ -4,9 +4,13 @@ class WatchsetsGrid < ApplicationGrid
     Watchset
   end
 
-  filter(:name, :integer)
+  filter(:name, :string)
   filter(:created_at, :date, range: true)
 
-  column(:name)
+  column(:name) do |watchset|
+    format(watchset.name) do |name|
+      link_to name, watchset_path(watchset)
+    end
+  end
   date_column(:created_at)
 end

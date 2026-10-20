@@ -108,16 +108,13 @@ RSpec.describe WatchsetGrid do
     end
   end
 
-  context "when generate_watchbill came back unsatisfiable" do
-    # #generate_watchbill returns solver.unsat_core -- an Array -- rather than a
-    # Watchbill when the roster cannot cover every station and shift. The
-    # columns call #watchbill_station_assignments on whatever they are handed,
-    # so an Array blows up as soon as there is a row to render.
-    it "raises once there is a station to render" do
-      create(:watchstation, watchset: watchset)
+  context "when given an unsaved watchbill with no assignments" do
+    # What the show page hands the grid when no valid watchbill exists.
+    it "renders each station with every shift blank" do
+      create(:watchstation, name: "Rover", watchset: watchset)
 
-      expect { grid_for([], watchset: watchset).rows }
-        .to raise_error(NoMethodError, /watchbill_station_assignments/)
+      expect(grid_for(Watchbill.new(watchset: watchset), watchset: watchset).rows)
+        .to eq([ [ "Rover", nil, nil, nil ] ])
     end
   end
 end

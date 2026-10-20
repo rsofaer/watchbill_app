@@ -46,14 +46,12 @@ RSpec.describe "Watchsets", mutant_expression: "WatchsetsController*" do
         expect(response.body).to include("03/07/2026")
       end
 
-      # The grid has a name column and a date column and nothing else, so
-      # there is still no way to reach a watchset from the list.
-      it "does not yet link a row to the watchset it names" do
+      it "links each row to the watchset it names" do
         watchset = create(:watchset, name: "Indian Point")
 
         get watchsets_url
 
-        expect(response.body).not_to include(%(href="#{watchset_path(watchset)}"))
+        expect(response.body).to include(%(<a href="#{watchset_path(watchset)}">Indian Point</a>))
       end
     end
 
@@ -114,13 +112,15 @@ RSpec.describe "Watchsets", mutant_expression: "WatchsetsController*" do
         expect(response.body).not_to include("Ancient")
       end
 
-      it "ignores a non-numeric name filter, because that filter is an integer filter" do
+      it "narrows the list by name" do
         create(:watchset, name: "Indian Point")
+        create(:watchset, name: "Drydock")
 
         get watchsets_url, params: { watchsets_grid: { name: "Indian Point" } }
 
         expect(response).to have_http_status(:success)
         expect(response.body).to include("Indian Point")
+        expect(response.body).not_to include("Drydock")
       end
 
       it "orders by a requested column without error" do
@@ -174,23 +174,84 @@ RSpec.describe "Watchsets", mutant_expression: "WatchsetsController*" do
       end
     end
 
-    # The two contexts below pin bugs that are live today. They assert the
-    # failure rather than the behaviour the page is reaching for, so that
-    # fixing either one turns a spec red and asks to be updated.
     context "when the watchset has stations but nobody is qualified" do
-      it "fails to render, because #generate_watchbill returns nil and the grid dereferences it" do
-        watchset = create(:watchset, name: "Unstaffed")
-        create_list(:watchstation, 3, watchset: watchset)
+      let!(:watchset) { create(:watchset, name: "Unstaffed") }
 
-        expect { get watchset_url(watchset) }
-          .to raise_error(ActionView::Template::Error, /watchbill_station_assignments/)
+      before { create(:watchstation, name: "Rover", watchset: watchset) }
+
+      it "renders the stations with every shift blank" do
+        get watchset_url(watchset)
+
+        expect(response).to have_http_status(:success)
+        expect(response.body).to include("Rover")
+        expect(response.body).not_to include("datagrid-no-results")
+      end
+
+      it "says that no valid watchbill exists" do
+        get watchset_url(watchset)
+
+        expect(response.body).to include("No valid watchbill exists")
+      end
+    end
+
+    context "when the watchset can be fully staffed" do
+      it "names a qualified worker in every shift" do
+        watchset = create(:watchset, name: "Staffed")
+        qualification = create(:qualification)
+        create(:watchstation, name: "Rover", watchset: watchset, qualification: qualification)
+        names = %w[Ann Bo Cy]
+        names.each { |name| create(:worker, name: name, qualifications: [ qualification ]) }
+
+        get watchset_url(watchset)
+
+        expect(response).to have_http_status(:success)
+        expect(response.body).not_to include("No valid watchbill exists")
+        names.each { |name| expect(response.body).to include(name) }
+      end
+    end
+
+    context "when the watchset has many stations" do
+      let!(:watchset) { create(:watchset, name: "Big") }
+
+      before do
+        30.times { |i| create(:watchstation, name: format("Station %02d", i), watchset: watchset) }
+        create(:watchstation, name: "Somebody Else's Station", watchset: create(:watchset))
+      end
+
+      it "lists only this watchset's stations, 25 to a page" do
+        get watchset_url(watchset)
+
+        expect(response.body).not_to include("Somebody Else's Station")
+        expect(response.body.scan(/<tr/).size).to eq(26) # 25 rows plus the header
+      end
+
+      it "serves the remaining stations on the next page" do
+        get watchset_url(watchset), params: { page: 2 }
+
+        expect(response.body.scan(/<tr/).size).to eq(6) # 5 rows plus the header
+        expect(response.body).not_to include("Somebody Else's Station")
+      end
+
+      it "orders the stations as requested" do
+        get watchset_url(watchset), params: { watchset_grid: { order: "name", descending: "true" } }
+
+        expect(response.body).to include("Station 29")
+        expect(response.body).not_to include("Station 00")
       end
     end
 
     context "when the id matches no watchset" do
-      it "fails after the redirect, because #show carries on past it" do
-        expect { get watchset_url(id: 999_999) }
-          .to raise_error(NoMethodError, /generate_watchbill/)
+      it "redirects to the list" do
+        get watchset_url(id: 999_999)
+
+        expect(response).to redirect_to(watchsets_path)
+      end
+
+      it "shows why on the list" do
+        get watchset_url(id: 999_999)
+        follow_redirect!
+
+        expect(response.body).to include(%(<div class="alert alert-danger" role="alert">Watchset not found.</div>))
       end
     end
   end

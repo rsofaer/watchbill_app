@@ -54,9 +54,8 @@ RSpec.describe Watchset do
   end
 
   # #generate_watchbill bails out before it builds any Z3 sort whenever one of
-  # the three sets it needs is empty. Those are the only cases this spec can
-  # cover, because declaring the solver's enum sorts is a process-global,
-  # one-shot operation -- see spec/models/watchset_solver_spec.rb.
+  # the three sets it needs is empty. Solver runs are covered in
+  # spec/models/watchset_solver_spec.rb.
   describe "#generate_watchbill when there is nothing to solve" do
     it "returns nil for a watchset with no watchstations at all" do
       expect(create(:watchset).generate_watchbill).to be_nil

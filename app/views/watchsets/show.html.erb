@@ -1,6 +1,11 @@
 <% content_for :navtitle do %>
   <%= @watchset.name %>
 <% end %>
+<% if @watchbill.watchbill_station_assignments.empty? && @watchset.watchstations.any? %>
+  <div class="alert alert-warning" role="alert">
+    No valid watchbill exists: there are not enough qualified workers to fill every watchstation on every shift.
+  </div>
+<% end %>
 <%= paginate(@grid.assets) %>
 <%= datagrid_table @grid %>
 <%= paginate(@grid.assets) %>

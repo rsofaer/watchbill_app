@@ -36,3 +36,7 @@ end
 Then('I should see a link to add a watchstation.') do
   pending "the watchset page has no link for adding a watchstation yet"
 end
+
+Then('I should see {string}') do |text|
+  expect(page).to have_content(text)
+end

@@ -9,11 +9,11 @@ class WatchsetsController < ApplicationController
     @watchset = Watchset.find_by(id: params[:id])
     if not @watchset
       flash[:error] = "Watchset not found."
-      redirect_to watchsets_path
+      return redirect_to watchsets_path
     end
 
-    @watchbill = @watchset.generate_watchbill
-    @grid = WatchsetGrid.new(grid_params.merge(watchbill: @watchbill)) do |scope|
+    @watchbill = @watchset.generate_watchbill || Watchbill.new
+    @grid = WatchsetGrid.new(watchset_grid_params.merge(watchbill: @watchbill)) do |scope|
       scope.page(params[:page])
         .where(watchset: @watchset)
     end
@@ -23,5 +23,9 @@ class WatchsetsController < ApplicationController
 
   def grid_params
     params.fetch(:watchsets_grid, {}).permit!
+  end
+
+  def watchset_grid_params
+    params.fetch(:watchset_grid, {}).permit!
   end
 end

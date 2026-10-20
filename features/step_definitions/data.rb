@@ -13,8 +13,7 @@ end
 # The watchset page solves for a watchbill before it renders, and the solver
 # treats every station-and-shift as a slot it must fill from a distinct
 # qualified worker. A station with fewer than three qualified workers makes the
-# problem unsatisfiable, and the page fails rather than rendering a partial
-# watchbill -- so a scenario that wants to see stations has to staff them.
+# problem unsatisfiable, and the page warns that no valid watchbill exists.
 Given('each watchstation has {int} qualified workers') do |count|
   Watchstation.find_each do |station|
     count.times do

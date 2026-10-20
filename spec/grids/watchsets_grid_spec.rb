@@ -50,16 +50,15 @@ RSpec.describe WatchsetsGrid do
       expect(grid.assets.map(&:name)).to eq([ "Zulu", "Alpha" ])
     end
 
-    # Datagrid walks #rows in batches, and ActiveRecord's batching replaces any
-    # ORDER BY with one on the primary key. So the ordering above reaches
-    # #assets -- which is what the views paginate -- but not the rendered table.
-    it "ignores that ordering when building rows, because rows are batched by id" do
+    # ActiveRecord's batching would replace the ORDER BY with one on the
+    # primary key, so ApplicationGrid turns batching off.
+    it "honours that ordering when building rows" do
       create(:watchset, name: "Zulu")
       create(:watchset, name: "Alpha")
 
       grid = described_class.new(order: :name)
 
-      expect(grid.rows.map(&:first)).to eq([ "Zulu", "Alpha" ])
+      expect(grid.rows.map(&:first)).to eq([ "Alpha", "Zulu" ])
     end
   end
 
@@ -90,16 +89,12 @@ RSpec.describe WatchsetsGrid do
     end
   end
 
-  # The name filter is declared `:integer` against a string column. Datagrid
-  # casts the input before comparing, so a non-numeric search term becomes nil
-  # and the filter drops out of the query entirely. These examples pin the
-  # behaviour that ships today, not the behaviour the form implies.
   describe "the name filter" do
-    it "is ignored for an ordinary name, because the filter casts to an integer" do
-      create(:watchset, name: "Indian Point")
+    it "keeps only the watchset with that name" do
+      match = create(:watchset, name: "Indian Point")
       create(:watchset, name: "Somewhere Else")
 
-      expect(described_class.new(name: "Indian Point").assets.count).to eq(2)
+      expect(described_class.new(name: "Indian Point").assets).to contain_exactly(match)
     end
 
     it "compares a numeric term against the name column" do

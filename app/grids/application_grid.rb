@@ -5,6 +5,10 @@ class ApplicationGrid < Datagrid::Base
     # Uncomment to make all columns HTML by default
     # html: true,
   }
+  # ActiveRecord batching replaces any ORDER BY with one on the primary key,
+  # which would make #rows ignore the requested order.
+  self.batch_size = nil
+
   # Enable forbidden attributes protection
   # self.forbidden_attributes_protection = true
 

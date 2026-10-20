@@ -9,7 +9,6 @@
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
-    <%= render "layouts/navbar" %>
     <%= yield :head %>
 
     <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
@@ -27,7 +26,11 @@
   </head>
 
   <body>
+    <%= render "layouts/navbar" %>
     <main class="container-fluid flex">
+      <% flash.each do |type, message| %>
+        <div class="alert alert-<%= type.to_s == "error" ? "danger" : "info" %>" role="alert"><%= message %></div>
+      <% end %>
       <%= yield %>
     </main>
   </body>
