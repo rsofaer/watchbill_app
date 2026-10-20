@@ -45,9 +45,6 @@ RSpec.configure do |config|
   # instead of true.
   config.use_transactional_fixtures = true
 
-  # Mirrors the `fixtures :all` that test/test_helper.rb used to apply globally.
-  config.global_fixtures = :all
-
   # You can uncomment this line to turn off ActiveRecord support entirely.
   # config.use_active_record = false
 
