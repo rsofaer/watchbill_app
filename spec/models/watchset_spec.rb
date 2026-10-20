@@ -1,6 +1,19 @@
 require "rails_helper"
 
 RSpec.describe Watchset do
+  describe "validations" do
+    it "requires a name" do
+      watchset = build(:watchset, name: " ")
+
+      expect(watchset).not_to be_valid
+      expect(watchset.errors[:name]).to be_present
+    end
+
+    it "is valid with a name" do
+      expect(build(:watchset, name: "Drydock")).to be_valid
+    end
+  end
+
   describe "associations" do
     it "has no watchstations, qualifications or workers when empty" do
       watchset = create(:watchset)

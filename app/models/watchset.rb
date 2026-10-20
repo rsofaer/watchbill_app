@@ -3,6 +3,8 @@ class Watchset < ApplicationRecord
   has_many :qualifications, through: :watchstations
   has_many :workers, through: :qualifications
 
+  validates :name, presence: true
+
   # Returns an unsaved Watchbill in which every watchstation has a qualified
   # worker on every shift, or nil when there is nothing to solve or no such
   # assignment exists.

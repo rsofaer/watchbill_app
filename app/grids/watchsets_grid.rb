@@ -13,4 +13,7 @@ class WatchsetsGrid < ApplicationGrid
     end
   end
   date_column(:created_at)
+  column(:edit, header: "", html: true) do |watchset|
+    link_to "Edit", edit_watchset_path(watchset)
+  end
 end

@@ -34,9 +34,42 @@ Then('I should see pagination controls') do
 end
 
 Then('I should see a link to add a watchstation.') do
-  pending "the watchset page has no link for adding a watchstation yet"
+  expect(page).to have_link("Add or remove watchstations")
+end
+
+When('I am on the edit page for {string}') do |name|
+  visit edit_watchset_path(Watchset.find_by!(name: name))
+end
+
+When('I follow {string}') do |link|
+  click_link link
+end
+
+When('I fill in {string} with {string}') do |field, value|
+  fill_in field, with: value
+end
+
+When('I select {string} from {string}') do |option, field|
+  select option, from: field
+end
+
+When('I press {string}') do |button|
+  click_button button
+end
+
+When('I press {string} for the watchstation {string}') do |button, name|
+  within("table.watchstations tr", text: name) { click_button button }
 end
 
 Then('I should see {string}') do |text|
   expect(page).to have_content(text)
+end
+
+Then('I should see the watchstation {string} requiring {string}') do |name, qualification|
+  row = find("table.watchstations tbody tr", text: name)
+  expect(row).to have_css("td", text: qualification)
+end
+
+Then('I should not see the watchstation {string}') do |name|
+  expect(page).not_to have_css("table.watchstations tbody tr", text: name)
 end

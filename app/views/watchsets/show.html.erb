@@ -6,6 +6,7 @@
     No valid watchbill exists: there are not enough qualified workers to fill every watchstation on every shift.
   </div>
 <% end %>
+<%= link_to "Add or remove watchstations", edit_watchset_path(@watchset), class: "btn btn-outline-primary my-2" %>
 <%= paginate(@grid.assets) %>
 <%= datagrid_table @grid %>
 <%= paginate(@grid.assets) %>

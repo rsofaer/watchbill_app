@@ -3,6 +3,7 @@
 <% content_for :navtitle do %>
   Your Watchbills
 <% end %>
+<%= link_to "New watchset", new_watchset_path, class: "btn btn-primary my-2" %>
 <%= paginate(@grid.assets) %>
 <%= datagrid_table @grid %>
 <%= paginate(@grid.assets) %>

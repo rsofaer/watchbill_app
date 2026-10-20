@@ -21,4 +21,19 @@ RSpec.describe Watchstation do
     expect(station.watchset).to be_a(Watchset)
     expect(station.qualification).to be_a(Qualification)
   end
+
+  it "requires a name" do
+    station = build(:watchstation, name: "")
+
+    expect(station).not_to be_valid
+    expect(station.errors[:name]).to be_present
+  end
+
+  it "takes its watchbill assignments with it when destroyed" do
+    assignment = create(:watchbill_station_assignment)
+
+    assignment.watchstation.destroy!
+
+    expect(WatchbillStationAssignment.exists?(assignment.id)).to be(false)
+  end
 end

@@ -1,8 +1,13 @@
 require "rails_helper"
 
 RSpec.describe WatchsetsGrid do
-  it "exposes a name column and a created_at column" do
-    expect(described_class.column_names).to eq([ :name, :created_at ])
+  it "exposes a name column, a created_at column and an edit link column" do
+    expect(described_class.column_names).to eq([ :name, :created_at, :edit ])
+  end
+
+  it "only renders the edit link column in HTML" do
+    expect(described_class.new.data_columns.map(&:name)).to eq([ :name, :created_at ])
+    expect(described_class.new.html_columns.map(&:name)).to eq([ :name, :created_at, :edit ])
   end
 
   context "with no watchsets" do

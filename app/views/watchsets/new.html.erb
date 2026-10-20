@@ -1,0 +1,12 @@
+<% content_for :navtitle do %>
+  New Watchset
+<% end %>
+<%= render "watchsets/errors", record: @watchset %>
+<%= form_with model: @watchset do |f| %>
+  <div class="mb-3">
+    <%= f.label :name, class: "form-label" %>
+    <%= f.text_field :name, class: "form-control" %>
+  </div>
+  <%= f.submit "Create watchset", class: "btn btn-primary" %>
+  <%= link_to "Cancel", watchsets_path, class: "btn btn-link" %>
+<% end %>

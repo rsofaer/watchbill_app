@@ -28,9 +28,7 @@
   <body>
     <%= render "layouts/navbar" %>
     <main class="container-fluid flex">
-      <% flash.each do |type, message| %>
-        <div class="alert alert-<%= type.to_s == "error" ? "danger" : "info" %>" role="alert"><%= message %></div>
-      <% end %>
+      <%= render "layouts/flash" %>
       <%= yield %>
     </main>
   </body>

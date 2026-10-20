@@ -1,0 +1,43 @@
+<% content_for :navtitle do %>
+  <%= @watchset.name %>
+<% end %>
+<h2 class="h4 mt-2">Watchstations</h2>
+<% watchstations = @watchset.watchstations.includes(:qualification).order(:name) %>
+<% if watchstations.empty? %>
+  <p class="watchstations-empty">This watchset has no watchstations yet.</p>
+<% else %>
+  <table class="table watchstations">
+    <thead>
+      <tr><th>Watchstation</th><th>Qualification</th><th></th></tr>
+    </thead>
+    <tbody>
+      <% watchstations.each do |watchstation| %>
+        <tr id="<%= dom_id(watchstation) %>">
+          <td><%= watchstation.name %></td>
+          <td><%= watchstation.qualification.name %></td>
+          <td><%= button_to "Remove", watchset_watchstation_path(@watchset, watchstation), method: :delete, class: "btn btn-sm btn-outline-danger" %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
+
+<h2 class="h4 mt-4">Add a watchstation</h2>
+<% qualifications = Qualification.order(:name) %>
+<% if qualifications.empty? %>
+  <p class="qualifications-empty">There are no qualifications to require yet.</p>
+<% else %>
+  <%= render "watchsets/errors", record: @watchstation %>
+  <%= form_with model: [ @watchset, @watchstation ] do |f| %>
+    <div class="mb-3">
+      <%= f.label :name, class: "form-label" %>
+      <%= f.text_field :name, class: "form-control" %>
+    </div>
+    <div class="mb-3">
+      <%= f.label :qualification_id, "Required qualification", class: "form-label" %>
+      <%= f.collection_select :qualification_id, qualifications, :id, :name, { prompt: "Choose a qualification" }, class: "form-select" %>
+    </div>
+    <%= f.submit "Add watchstation", class: "btn btn-primary" %>
+  <% end %>
+<% end %>
+<%= link_to "Back to watchsets", watchsets_path, class: "btn btn-link mt-3" %>
