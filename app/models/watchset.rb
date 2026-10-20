@@ -1,5 +1,6 @@
 class Watchset < ApplicationRecord
   has_many :watchstations
+  has_many :watchbills
   has_many :qualifications, through: :watchstations
   has_many :workers, through: :qualifications
 
@@ -87,14 +88,16 @@ class Watchset < ApplicationRecord
 
     puts solver.check
     if solver.satisfiable?
-      assignments = solver.model.func_interp(assigned_worker)
+      # Walking the function's interpretation entry by entry misses whichever
+      # slot Z3 leaves to its `else` branch, so ask the model about every slot.
+      model = solver.model
       bill = Watchbill::build(watchset: self)
-      assignments.each do |input, worker|
-        station, shift = input
-        station_id = station.to_s.split("_").last.to_i
-        worker_id = worker.to_s.split("_").last.to_i
-        shift = shift.to_s
-        bill.watchbill_station_assignments.build(watchstation_id: station_id, shift: shift, worker_id: worker_id)
+      watchstations.each do |station|
+        WatchbillStationAssignment.shifts.each_key do |shift|
+          worker = model[assigned_worker[watch_sort[station.z3_id], shift_sort[shift]]]
+          worker_id = worker.to_s.split("_").last.to_i
+          bill.watchbill_station_assignments.build(watchstation: station, shift: shift, worker_id: worker_id)
+        end
       end
       bill
     else

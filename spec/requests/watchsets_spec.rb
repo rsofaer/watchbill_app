@@ -172,6 +172,69 @@ RSpec.describe "Watchsets", mutant_expression: "WatchsetsController*" do
         expect(response.body).to include("datagrid-no-results")
         expect(response.body.scan(/<tr/).size).to eq(2) # the header and the no-results row
       end
+
+      it "offers no save button, because there is no watchbill to save" do
+        get watchset_url(watchset)
+
+        expect(response.body).not_to include("save-watchbill", "Save this watchbill")
+      end
+
+      it "links to the watchset's saved watchbills with a count" do
+        create_list(:watchbill, 2, watchset: watchset)
+        create(:watchbill)
+
+        get watchset_url(watchset)
+
+        expect(response.body).to include(%(<a href="#{watchset_watchbills_path(watchset)}">Saved watchbills (2)</a>))
+      end
+    end
+
+    # The solver can run only once per process (see watchset_solver_spec.rb),
+    # so these stand a hand-built watchbill in for the one it would generate.
+    context "when a watchbill has been generated" do
+      let!(:watchset) { create(:watchset, name: "Staffed") }
+      let(:rover) { create(:watchstation, name: "Rover", watchset: watchset) }
+      let(:workers) { create_list(:worker, 3, qualifications: [ rover.qualification ]) }
+      let(:generated) do
+        Watchbill.new(watchset: watchset).tap do |bill|
+          WatchbillStationAssignment.shifts.each_key.zip(workers) do |shift, worker|
+            bill.watchbill_station_assignments.build(watchstation: rover, shift: shift, worker: worker)
+          end
+        end
+      end
+
+      before do
+        allow(Watchset).to receive(:find_by).with(id: watchset.id.to_s).and_return(watchset)
+        allow(watchset).to receive(:generate_watchbill).and_return(generated)
+      end
+
+      it "offers a button that posts the watchbill to be saved" do
+        get watchset_url(watchset)
+
+        expect(response.body).to include(%(action="#{watchset_watchbills_path(watchset)}"))
+        expect(response.body).to include(%(value="Save this watchbill"))
+      end
+
+      it "carries every assignment in the save form" do
+        get watchset_url(watchset)
+
+        WatchbillStationAssignment.shifts.each_key.with_index.zip(workers) do |(shift, i), worker|
+          prefix = "watchbill[watchbill_station_assignments_attributes][#{i}]"
+          expect(response.body).to include(%(value="#{rover.id}" name="#{prefix}[watchstation_id]"))
+          expect(response.body).to include(%(value="#{shift}" name="#{prefix}[shift]"))
+          expect(response.body).to include(%(value="#{worker.id}" name="#{prefix}[worker_id]"))
+        end
+      end
+
+      it "saves the generated watchbill when that form is submitted" do
+        get watchset_url(watchset)
+        fields = response.body.scan(/value="([^"]*)" name="(watchbill\[[^"]+)"/).map(&:reverse)
+        expect(fields.size).to eq(9)
+
+        expect { post watchset_watchbills_url(watchset), params: URI.encode_www_form(fields) }
+          .to change(Watchbill, :count).by(1)
+        expect(Watchbill.last).to be_properly_staffed
+      end
     end
 
     # The two contexts below pin bugs that are live today. They assert the

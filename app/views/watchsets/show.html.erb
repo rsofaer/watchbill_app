@@ -1,6 +1,19 @@
 <% content_for :navtitle do %>
   <%= @watchset.name %>
 <% end %>
+<p>
+  <%= link_to "Saved watchbills (#{@watchset.watchbills.count})", watchset_watchbills_path(@watchset) %>
+</p>
+<% if @watchbill.is_a?(Watchbill) %>
+  <%= form_with model: @watchbill, url: watchset_watchbills_path(@watchset), class: "save-watchbill" do |form| %>
+    <%= form.fields_for :watchbill_station_assignments do |fields| %>
+      <%= fields.hidden_field :watchstation_id %>
+      <%= fields.hidden_field :shift %>
+      <%= fields.hidden_field :worker_id %>
+    <% end %>
+    <%= form.submit "Save this watchbill", class: "btn btn-primary" %>
+  <% end %>
+<% end %>
 <%= paginate(@grid.assets) %>
 <%= datagrid_table @grid %>
 <%= paginate(@grid.assets) %>

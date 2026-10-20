@@ -8,10 +8,10 @@
       "Cucumber Features",
       "RSpec"
     ],
-    "project_name": "More tests",
-    "timestamp": "2026-10-20T01:06:43.987-04:00",
-    "root": "/Users/raphael/workspace/esaas/watchbill_worktrees/more_tests",
-    "commit": "16641611fba744e5d343666d46c52e0b1243c8a6",
+    "project_name": "Save watchbills",
+    "timestamp": "2026-10-20T01:51:11.458-04:00",
+    "root": "/Users/raphael/workspace/esaas/watchbill_worktrees/save_watchbills",
+    "commit": "b077e5cbf9667cc2934590a1efadc76bad9f636b",
     "primary_coverage": "line",
     "line_coverage": true,
     "branch_coverage": true,
@@ -19,19 +19,19 @@
   },
   "total": {
     "lines": {
-      "covered": 135,
+      "covered": 190,
       "missed": 5,
-      "omitted": 130,
-      "total": 140,
-      "percent": 96.42857142857143,
-      "strength": 113.64285714285714
+      "omitted": 175,
+      "total": 195,
+      "percent": 97.43589743589743,
+      "strength": 96.31282051282051
     },
     "branches": {
-      "covered": 20,
+      "covered": 27,
       "missed": 1,
-      "total": 21,
-      "percent": 95.23809523809524,
-      "strength": 27.0
+      "total": 28,
+      "percent": 96.42857142857143,
+      "strength": 40.714285714285715
     }
   },
   "coverage": {
@@ -64,6 +64,121 @@
       "covered_branches": 0,
       "missed_branches": 0,
       "total_branches": 0
+    },
+    "app/controllers/watchbills_controller.rb": {
+      "source": [
+        "class WatchbillsController < ApplicationController",
+        "  def index",
+        "    @watchset = Watchset.find(params.fetch(:watchset_id))",
+        "    @grid = WatchbillsGrid.new(grid_params) do |scope|",
+        "      scope.page(params[:page])",
+        "        .where(watchset: @watchset)",
+        "    end",
+        "  end",
+        "",
+        "  def show",
+        "    @watchbill = Watchbill.find(params.fetch(:id))",
+        "    @watchset = @watchbill.watchset",
+        "    @grid = WatchsetGrid.new(watchbill: @watchbill) do |scope|",
+        "      scope.page(params[:page])",
+        "        .where(watchset: @watchset)",
+        "    end",
+        "  end",
+        "",
+        "  def create",
+        "    watchset = Watchset.find(params.fetch(:watchset_id))",
+        "    watchbill = watchset.watchbills.build(watchbill_params)",
+        "    if watchbill.save",
+        "      flash[:notice] = \"Watchbill saved.\"",
+        "      redirect_to watchbill",
+        "    else",
+        "      flash[:error] = \"Watchbill could not be saved: #{watchbill.errors.full_messages.to_sentence}\"",
+        "      redirect_to watchset",
+        "    end",
+        "  end",
+        "",
+        "  protected",
+        "",
+        "  def grid_params",
+        "    params.fetch(:watchbills_grid, {}).permit!",
+        "  end",
+        "",
+        "  def watchbill_params",
+        "    params.fetch(:watchbill, {})",
+        "      .permit(watchbill_station_assignments_attributes: [ :watchstation_id, :shift, :worker_id ])",
+        "  end",
+        "end"
+      ],
+      "lines": [
+        2,
+        2,
+        9,
+        8,
+        24,
+        null,
+        null,
+        null,
+        null,
+        2,
+        12,
+        11,
+        11,
+        33,
+        null,
+        null,
+        null,
+        null,
+        2,
+        10,
+        9,
+        9,
+        7,
+        7,
+        null,
+        2,
+        2,
+        null,
+        null,
+        null,
+        2,
+        null,
+        2,
+        8,
+        null,
+        null,
+        2,
+        9,
+        null,
+        null,
+        null
+      ],
+      "lines_covered_percent": 100.0,
+      "covered_lines": 23,
+      "missed_lines": 0,
+      "omitted_lines": 18,
+      "total_lines": 23,
+      "branches": [
+        {
+          "type": "then",
+          "start_line": 23,
+          "end_line": 24,
+          "coverage": 7,
+          "inline": false,
+          "report_line": 22
+        },
+        {
+          "type": "else",
+          "start_line": 26,
+          "end_line": 27,
+          "coverage": 2,
+          "inline": false,
+          "report_line": 25
+        }
+      ],
+      "branches_covered_percent": 100.0,
+      "covered_branches": 2,
+      "missed_branches": 0,
+      "total_branches": 2
     },
     "app/controllers/watchsets_controller.rb": {
       "source": [
@@ -104,15 +219,15 @@
         null,
         null,
         2,
-        8,
-        8,
+        14,
+        14,
         1,
         1,
         null,
         null,
-        8,
-        7,
-        20,
+        14,
+        13,
+        38,
         null,
         null,
         null,
@@ -120,7 +235,7 @@
         2,
         null,
         2,
-        28,
+        34,
         null,
         null
       ],
@@ -164,8 +279,8 @@
         "  #   date_column(:owner_registered_at) do |model|",
         "  #     model.owner.registered_at",
         "  #   end",
-        "  def self.date_column(name, *args, &block)",
-        "    column(name, *args) do |model|",
+        "  def self.date_column(name, *args, **options, &block)",
+        "    column(name, *args, **options) do |model|",
         "      format(block ? block.call(model) : model.public_send(name)) do |date|",
         "        date&.strftime(\"%m/%d/%Y\") || \"&mdash;\".html_safe",
         "      end",
@@ -180,8 +295,8 @@
         "  #   boolean_column(:has_tasks, preload: :tasks) do |model|",
         "  #     model.tasks.unfinished.any?",
         "  #   end",
-        "  def self.boolean_column(name, *args, &block)",
-        "    column(name, *args) do |model|",
+        "  def self.boolean_column(name, *args, **options, &block)",
+        "    column(name, *args, **options) do |model|",
         "      value = block ? block.call(model) : model.public_send(name)",
         "      value ? \"Yes\" : \"No\"",
         "    end",
@@ -214,9 +329,9 @@
         null,
         null,
         2,
-        17,
-        188,
-        184,
+        39,
+        227,
+        222,
         null,
         null,
         null,
@@ -230,9 +345,9 @@
         null,
         null,
         2,
-        8,
-        4,
-        4,
+        26,
+        44,
+        44,
         null,
         null,
         null,
@@ -253,7 +368,7 @@
           "type": "then",
           "start_line": 22,
           "end_line": 22,
-          "coverage": 182,
+          "coverage": 220,
           "inline": true,
           "report_line": 22
         },
@@ -269,7 +384,7 @@
           "type": "else",
           "start_line": 21,
           "end_line": 21,
-          "coverage": 185,
+          "coverage": 224,
           "inline": true,
           "report_line": 21
         },
@@ -285,7 +400,7 @@
           "type": "else",
           "start_line": 37,
           "end_line": 37,
-          "coverage": 2,
+          "coverage": 42,
           "inline": true,
           "report_line": 37
         },
@@ -293,7 +408,7 @@
           "type": "then",
           "start_line": 38,
           "end_line": 38,
-          "coverage": 2,
+          "coverage": 39,
           "inline": true,
           "report_line": 38
         },
@@ -301,7 +416,7 @@
           "type": "else",
           "start_line": 38,
           "end_line": 38,
-          "coverage": 2,
+          "coverage": 5,
           "inline": true,
           "report_line": 38
         }
@@ -310,6 +425,44 @@
       "covered_branches": 7,
       "missed_branches": 0,
       "total_branches": 7
+    },
+    "app/grids/watchbills_grid.rb": {
+      "source": [
+        "class WatchbillsGrid < ApplicationGrid",
+        "  scope do",
+        "    Watchbill.order(created_at: :desc)",
+        "  end",
+        "",
+        "  column(:id, header: \"Watchbill\", html: true) do |watchbill|",
+        "    link_to \"Watchbill ##{watchbill.id}\", watchbill_path(watchbill)",
+        "  end",
+        "  date_column(:created_at, header: \"Saved on\")",
+        "  boolean_column(:properly_staffed?, header: \"Valid\", order: false)",
+        "end"
+      ],
+      "lines": [
+        2,
+        2,
+        33,
+        null,
+        null,
+        2,
+        38,
+        null,
+        2,
+        2,
+        null
+      ],
+      "lines_covered_percent": 100.0,
+      "covered_lines": 7,
+      "missed_lines": 0,
+      "omitted_lines": 4,
+      "total_lines": 7,
+      "branches": [],
+      "branches_covered_percent": 100.0,
+      "covered_branches": 0,
+      "missed_branches": 0,
+      "total_branches": 0
     },
     "app/grids/watchset_grid.rb": {
       "source": [
@@ -340,20 +493,20 @@
         null,
         2,
         2,
-        46,
+        131,
         null,
         2,
         2,
-        4869,
-        48,
+        4978,
+        71,
         null,
         2,
-        4867,
-        48,
+        4976,
+        71,
         null,
         2,
-        4867,
-        48,
+        4976,
+        71,
         null,
         null,
         null
@@ -368,7 +521,7 @@
           "type": "then",
           "start_line": 10,
           "end_line": 10,
-          "coverage": 45,
+          "coverage": 61,
           "inline": true,
           "report_line": 10
         },
@@ -376,7 +529,7 @@
           "type": "else",
           "start_line": 10,
           "end_line": 10,
-          "coverage": 3,
+          "coverage": 10,
           "inline": true,
           "report_line": 10
         },
@@ -384,7 +537,7 @@
           "type": "then",
           "start_line": 14,
           "end_line": 14,
-          "coverage": 43,
+          "coverage": 60,
           "inline": true,
           "report_line": 14
         },
@@ -392,7 +545,7 @@
           "type": "else",
           "start_line": 14,
           "end_line": 14,
-          "coverage": 5,
+          "coverage": 11,
           "inline": true,
           "report_line": 14
         },
@@ -400,7 +553,7 @@
           "type": "then",
           "start_line": 18,
           "end_line": 18,
-          "coverage": 43,
+          "coverage": 59,
           "inline": true,
           "report_line": 18
         },
@@ -408,7 +561,7 @@
           "type": "else",
           "start_line": 18,
           "end_line": 18,
-          "coverage": 5,
+          "coverage": 12,
           "inline": true,
           "report_line": 18
         }
@@ -547,7 +700,7 @@
         2,
         null,
         2,
-        89,
+        101,
         null,
         null
       ],
@@ -592,10 +745,55 @@
         "  belongs_to :watchset",
         "  has_many :watchstations, through: :watchset",
         "",
-        "  has_many :watchbill_station_assignments",
+        "  has_many :watchbill_station_assignments, dependent: :destroy",
         "  has_many :workers, through: :watchbill_station_assignments",
-        "end",
-        ""
+        "",
+        "  accepts_nested_attributes_for :watchbill_station_assignments",
+        "",
+        "  # Everything that keeps this watchbill from staffing its watchset, checked",
+        "  # against the watchset and roster as they stand now. Qualifications and",
+        "  # watchstations can change after a watchbill is saved, so a bill that was",
+        "  # valid when it was saved can stop being valid later.",
+        "  def staffing_problems",
+        "    assignments = watchbill_station_assignments",
+        "    problems = []",
+        "",
+        "    assignments.each do |assignment|",
+        "      station = assignment.watchstation",
+        "      worker = assignment.worker",
+        "      if station.watchset != watchset",
+        "        problems << \"#{station.name} is not a watchstation in #{watchset.name}\"",
+        "      end",
+        "      unless worker.qualifications.include?(station.qualification)",
+        "        problems << \"#{worker.name} is not qualified for #{station.name} (#{assignment.shift})\"",
+        "      end",
+        "    end",
+        "",
+        "    assignments.group_by { |a| [ a.watchstation_id, a.shift ] }.each_value do |slot|",
+        "      next if slot.one?",
+        "      problems << \"#{slot.first.watchstation.name} has more than one worker on #{slot.first.shift}\"",
+        "    end",
+        "",
+        "    assignments.group_by(&:worker_id).each_value do |watches|",
+        "      next if watches.one?",
+        "      problems << \"#{watches.first.worker.name} is assigned to more than one watch\"",
+        "    end",
+        "",
+        "    filled = assignments.map { |a| [ a.watchstation_id, a.shift ] }",
+        "    watchstations.each do |station|",
+        "      WatchbillStationAssignment.shifts.each_key do |shift|",
+        "        next if filled.include?([ station.id, shift ])",
+        "        problems << \"#{station.name} has nobody on #{shift}\"",
+        "      end",
+        "    end",
+        "",
+        "    problems",
+        "  end",
+        "",
+        "  def properly_staffed?",
+        "    staffing_problems.empty?",
+        "  end",
+        "end"
       ],
       "lines": [
         2,
@@ -605,18 +803,104 @@
         2,
         2,
         null,
+        2,
+        null,
+        null,
+        null,
+        null,
+        null,
+        2,
+        66,
+        66,
+        null,
+        66,
+        112,
+        112,
+        112,
+        1,
+        null,
+        112,
+        5,
+        null,
+        null,
+        null,
+        178,
+        111,
+        1,
+        null,
+        null,
+        66,
+        111,
+        1,
+        null,
+        null,
+        178,
+        66,
+        71,
+        213,
+        103,
+        null,
+        null,
+        null,
+        66,
+        null,
+        null,
+        2,
+        46,
+        null,
         null
       ],
       "lines_covered_percent": 100.0,
-      "covered_lines": 5,
+      "covered_lines": 30,
       "missed_lines": 0,
-      "omitted_lines": 3,
-      "total_lines": 5,
-      "branches": [],
+      "omitted_lines": 23,
+      "total_lines": 30,
+      "branches": [
+        {
+          "type": "then",
+          "start_line": 22,
+          "end_line": 22,
+          "coverage": 1,
+          "inline": false,
+          "report_line": 21
+        },
+        {
+          "type": "then",
+          "start_line": 25,
+          "end_line": 25,
+          "coverage": 5,
+          "inline": false,
+          "report_line": 24
+        },
+        {
+          "type": "then",
+          "start_line": 30,
+          "end_line": 30,
+          "coverage": 110,
+          "inline": true,
+          "report_line": 30
+        },
+        {
+          "type": "then",
+          "start_line": 35,
+          "end_line": 35,
+          "coverage": 110,
+          "inline": true,
+          "report_line": 35
+        },
+        {
+          "type": "then",
+          "start_line": 42,
+          "end_line": 42,
+          "coverage": 110,
+          "inline": true,
+          "report_line": 42
+        }
+      ],
       "branches_covered_percent": 100.0,
-      "covered_branches": 0,
+      "covered_branches": 5,
       "missed_branches": 0,
-      "total_branches": 0
+      "total_branches": 5
     },
     "app/models/watchbill_station_assignment.rb": {
       "source": [
@@ -624,7 +908,7 @@
         "  belongs_to :watchbill",
         "  belongs_to :worker",
         "  belongs_to :watchstation",
-        "  enum :shift, [\"Days\", \"Swings\", \"Mids\"]",
+        "  enum :shift, [\"Days\", \"Swings\", \"Mids\"], validate: true",
         "end"
       ],
       "lines": [
@@ -650,6 +934,7 @@
       "source": [
         "class Watchset < ApplicationRecord",
         "  has_many :watchstations",
+        "  has_many :watchbills",
         "  has_many :qualifications, through: :watchstations",
         "  has_many :workers, through: :qualifications",
         "",
@@ -737,14 +1022,16 @@
         "",
         "    puts solver.check",
         "    if solver.satisfiable?",
-        "      assignments = solver.model.func_interp(assigned_worker)",
+        "      # Walking the function's interpretation entry by entry misses whichever",
+        "      # slot Z3 leaves to its `else` branch, so ask the model about every slot.",
+        "      model = solver.model",
         "      bill = Watchbill::build(watchset: self)",
-        "      assignments.each do |input, worker|",
-        "        station, shift = input",
-        "        station_id = station.to_s.split(\"_\").last.to_i",
-        "        worker_id = worker.to_s.split(\"_\").last.to_i",
-        "        shift = shift.to_s",
-        "        bill.watchbill_station_assignments.build(watchstation_id: station_id, shift: shift, worker_id: worker_id)",
+        "      watchstations.each do |station|",
+        "        WatchbillStationAssignment.shifts.each_key do |shift|",
+        "          worker = model[assigned_worker[watch_sort[station.z3_id], shift_sort[shift]]]",
+        "          worker_id = worker.to_s.split(\"_\").last.to_i",
+        "          bill.watchbill_station_assignments.build(watchstation: station, shift: shift, worker_id: worker_id)",
+        "        end",
         "      end",
         "      bill",
         "    else",
@@ -760,20 +1047,21 @@
         2,
         2,
         2,
+        2,
         null,
         2,
         null,
         null,
         null,
+        14,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null,
+        14,
         12,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        12,
-        10,
         null,
         14,
         6,
@@ -845,14 +1133,16 @@
         null,
         2,
         2,
+        null,
+        null,
         2,
         2,
         2,
-        10,
-        10,
-        10,
-        10,
-        10,
+        4,
+        12,
+        12,
+        12,
+        null,
         null,
         2,
         null,
@@ -866,64 +1156,64 @@
       "lines_covered_percent": 98.33333333333333,
       "covered_lines": 59,
       "missed_lines": 1,
-      "omitted_lines": 46,
+      "omitted_lines": 49,
       "total_lines": 60,
       "branches": [
         {
           "type": "then",
-          "start_line": 18,
-          "end_line": 18,
-          "coverage": 10,
+          "start_line": 19,
+          "end_line": 19,
+          "coverage": 12,
           "inline": false,
-          "report_line": 17
+          "report_line": 18
         },
         {
           "type": "then",
-          "start_line": 34,
-          "end_line": 34,
+          "start_line": 35,
+          "end_line": 35,
           "coverage": 12,
           "inline": false,
-          "report_line": 33
+          "report_line": 34
         },
         {
           "type": "else",
-          "start_line": 36,
-          "end_line": 36,
+          "start_line": 37,
+          "end_line": 37,
           "coverage": 12,
           "inline": false,
-          "report_line": 35
+          "report_line": 36
         },
         {
           "type": "then",
-          "start_line": 41,
-          "end_line": 41,
+          "start_line": 42,
+          "end_line": 42,
           "coverage": 4,
           "inline": false,
-          "report_line": 40
+          "report_line": 41
         },
         {
           "type": "else",
-          "start_line": 43,
-          "end_line": 43,
+          "start_line": 44,
+          "end_line": 44,
           "coverage": 4,
           "inline": false,
-          "report_line": 42
+          "report_line": 43
         },
         {
           "type": "then",
-          "start_line": 90,
-          "end_line": 99,
+          "start_line": 93,
+          "end_line": 102,
           "coverage": 2,
           "inline": false,
-          "report_line": 89
+          "report_line": 92
         },
         {
           "type": "else",
-          "start_line": 101,
-          "end_line": 101,
+          "start_line": 104,
+          "end_line": 104,
           "coverage": 0,
           "inline": false,
-          "report_line": 100
+          "report_line": 103
         }
       ],
       "branches_covered_percent": 85.71428571428571,
@@ -1007,22 +1297,23 @@
   "groups": {
     "Controllers": {
       "lines": {
-        "covered": 18,
+        "covered": 41,
         "missed": 0,
-        "omitted": 16,
-        "total": 18,
+        "omitted": 34,
+        "total": 41,
         "percent": 100.0,
-        "strength": 10.055555555555555
+        "strength": 10.097560975609756
       },
       "branches": {
-        "covered": 1,
+        "covered": 3,
         "missed": 0,
-        "total": 1,
+        "total": 3,
         "percent": 100.0,
-        "strength": 1.0
+        "strength": 3.3333333333333335
       },
       "files": [
         "app/controllers/application_controller.rb",
+        "app/controllers/watchbills_controller.rb",
         "app/controllers/watchsets_controller.rb"
       ]
     },
@@ -1088,19 +1379,19 @@
     },
     "Models": {
       "lines": {
-        "covered": 85,
+        "covered": 110,
         "missed": 1,
-        "omitted": 57,
-        "total": 86,
-        "percent": 98.83720930232558,
-        "strength": 4.662790697674419
+        "omitted": 80,
+        "total": 111,
+        "percent": 99.09909909909909,
+        "strength": 20.54054054054054
       },
       "branches": {
-        "covered": 6,
+        "covered": 11,
         "missed": 1,
-        "total": 7,
-        "percent": 85.71428571428571,
-        "strength": 6.285714285714286
+        "total": 12,
+        "percent": 91.66666666666667,
+        "strength": 31.833333333333332
       },
       "files": [
         "app/models/application_record.rb",
@@ -1115,22 +1406,23 @@
     },
     "Ungrouped": {
       "lines": {
-        "covered": 31,
+        "covered": 38,
         "missed": 0,
-        "omitted": 49,
-        "total": 31,
+        "omitted": 53,
+        "total": 38,
         "percent": 100.0,
-        "strength": 494.38709677419354
+        "strength": 423.2894736842105
       },
       "branches": {
         "covered": 13,
         "missed": 0,
         "total": 13,
         "percent": 100.0,
-        "strength": 40.15384615384615
+        "strength": 57.53846153846154
       },
       "files": [
         "app/grids/application_grid.rb",
+        "app/grids/watchbills_grid.rb",
         "app/grids/watchset_grid.rb",
         "app/grids/watchsets_grid.rb"
       ]
@@ -3303,6 +3595,971 @@
           "branch": 100.0
         },
         "app/grids/application_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/watchset_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/watchsets_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/application_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/jobs/application_job.rb": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "app/mailers/application_mailer.rb": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "app/models/application_record.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/qualification.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/watchbill.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/watchbill_station_assignment.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/watchset.rb": {
+          "line": 98.33,
+          "branch": 85.71
+        },
+        "app/models/watchstation.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/worker.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/worker_qualification.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      }
+    },
+    {
+      "created_at": "2026-10-20T05:40:55Z",
+      "branch": "save_watchbills",
+      "commit": "b077e5cbf9667cc2934590a1efadc76bad9f636b",
+      "totals": {
+        "line": 96.42,
+        "branch": 95.23
+      },
+      "groups": {
+        "Controllers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Helpers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Jobs": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "Mailers": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "Models": {
+          "line": 98.83,
+          "branch": 85.71
+        },
+        "Ungrouped": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      },
+      "files": {
+        "app/controllers/application_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/watchsets_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/application_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/watchset_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/watchsets_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/application_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/jobs/application_job.rb": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "app/mailers/application_mailer.rb": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "app/models/application_record.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/qualification.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/watchbill.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/watchbill_station_assignment.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/watchset.rb": {
+          "line": 98.33,
+          "branch": 85.71
+        },
+        "app/models/watchstation.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/worker.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/worker_qualification.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      }
+    },
+    {
+      "created_at": "2026-10-20T05:40:57Z",
+      "branch": "save_watchbills",
+      "commit": "b077e5cbf9667cc2934590a1efadc76bad9f636b",
+      "totals": {
+        "line": 96.42,
+        "branch": 95.23
+      },
+      "groups": {
+        "Controllers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Helpers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Jobs": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "Mailers": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "Models": {
+          "line": 98.83,
+          "branch": 85.71
+        },
+        "Ungrouped": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      },
+      "files": {
+        "app/controllers/application_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/watchsets_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/application_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/watchset_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/watchsets_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/application_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/jobs/application_job.rb": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "app/mailers/application_mailer.rb": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "app/models/application_record.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/qualification.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/watchbill.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/watchbill_station_assignment.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/watchset.rb": {
+          "line": 98.33,
+          "branch": 85.71
+        },
+        "app/models/watchstation.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/worker.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/worker_qualification.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      }
+    },
+    {
+      "created_at": "2026-10-20T05:45:59Z",
+      "branch": "save_watchbills",
+      "commit": "b077e5cbf9667cc2934590a1efadc76bad9f636b",
+      "totals": {
+        "line": 97.16,
+        "branch": 94.28
+      },
+      "groups": {
+        "Controllers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Helpers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Jobs": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "Mailers": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "Models": {
+          "line": 98.43,
+          "branch": 89.47
+        },
+        "Ungrouped": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      },
+      "files": {
+        "app/controllers/application_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/watchbills_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/watchsets_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/application_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/watchbills_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/watchset_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/watchsets_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/application_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/jobs/application_job.rb": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "app/mailers/application_mailer.rb": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "app/models/application_record.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/qualification.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/watchbill.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/watchbill_station_assignment.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/watchset.rb": {
+          "line": 97.4,
+          "branch": 85.71
+        },
+        "app/models/watchstation.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/worker.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/worker_qualification.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      }
+    },
+    {
+      "created_at": "2026-10-20T05:46:18Z",
+      "branch": "save_watchbills",
+      "commit": "b077e5cbf9667cc2934590a1efadc76bad9f636b",
+      "totals": {
+        "line": 97.43,
+        "branch": 96.42
+      },
+      "groups": {
+        "Controllers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Helpers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Jobs": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "Mailers": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "Models": {
+          "line": 99.09,
+          "branch": 91.66
+        },
+        "Ungrouped": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      },
+      "files": {
+        "app/controllers/application_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/watchbills_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/watchsets_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/application_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/watchbills_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/watchset_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/watchsets_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/application_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/jobs/application_job.rb": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "app/mailers/application_mailer.rb": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "app/models/application_record.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/qualification.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/watchbill.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/watchbill_station_assignment.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/watchset.rb": {
+          "line": 98.33,
+          "branch": 85.71
+        },
+        "app/models/watchstation.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/worker.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/worker_qualification.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      }
+    },
+    {
+      "created_at": "2026-10-20T05:49:05Z",
+      "branch": "save_watchbills",
+      "commit": "b077e5cbf9667cc2934590a1efadc76bad9f636b",
+      "totals": {
+        "line": 97.43,
+        "branch": 96.42
+      },
+      "groups": {
+        "Controllers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Helpers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Jobs": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "Mailers": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "Models": {
+          "line": 99.09,
+          "branch": 91.66
+        },
+        "Ungrouped": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      },
+      "files": {
+        "app/controllers/application_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/watchbills_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/watchsets_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/application_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/watchbills_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/watchset_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/watchsets_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/application_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/jobs/application_job.rb": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "app/mailers/application_mailer.rb": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "app/models/application_record.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/qualification.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/watchbill.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/watchbill_station_assignment.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/watchset.rb": {
+          "line": 98.33,
+          "branch": 85.71
+        },
+        "app/models/watchstation.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/worker.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/worker_qualification.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      }
+    },
+    {
+      "created_at": "2026-10-20T05:49:48Z",
+      "branch": "save_watchbills",
+      "commit": "b077e5cbf9667cc2934590a1efadc76bad9f636b",
+      "totals": {
+        "line": 97.43,
+        "branch": 96.42
+      },
+      "groups": {
+        "Controllers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Helpers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Jobs": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "Mailers": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "Models": {
+          "line": 99.09,
+          "branch": 91.66
+        },
+        "Ungrouped": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      },
+      "files": {
+        "app/controllers/application_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/watchbills_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/watchsets_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/application_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/watchbills_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/watchset_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/watchsets_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/application_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/jobs/application_job.rb": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "app/mailers/application_mailer.rb": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "app/models/application_record.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/qualification.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/watchbill.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/watchbill_station_assignment.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/watchset.rb": {
+          "line": 98.33,
+          "branch": 85.71
+        },
+        "app/models/watchstation.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/worker.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/worker_qualification.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      }
+    },
+    {
+      "created_at": "2026-10-20T05:49:59Z",
+      "branch": "save_watchbills",
+      "commit": "b077e5cbf9667cc2934590a1efadc76bad9f636b",
+      "totals": {
+        "line": 97.43,
+        "branch": 96.42
+      },
+      "groups": {
+        "Controllers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Helpers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Jobs": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "Mailers": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "Models": {
+          "line": 99.09,
+          "branch": 91.66
+        },
+        "Ungrouped": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      },
+      "files": {
+        "app/controllers/application_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/watchbills_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/watchsets_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/application_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/watchbills_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/watchset_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/watchsets_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/application_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/jobs/application_job.rb": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "app/mailers/application_mailer.rb": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "app/models/application_record.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/qualification.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/watchbill.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/watchbill_station_assignment.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/watchset.rb": {
+          "line": 98.33,
+          "branch": 85.71
+        },
+        "app/models/watchstation.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/worker.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/worker_qualification.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      }
+    },
+    {
+      "created_at": "2026-10-20T05:51:09Z",
+      "branch": "save_watchbills",
+      "commit": "b077e5cbf9667cc2934590a1efadc76bad9f636b",
+      "totals": {
+        "line": 97.47,
+        "branch": 96.42
+      },
+      "groups": {
+        "Controllers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Helpers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Jobs": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "Mailers": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "Models": {
+          "line": 99.09,
+          "branch": 91.66
+        },
+        "Ungrouped": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      },
+      "files": {
+        "app/controllers/application_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/watchbills_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/watchsets_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/application_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/watchbills_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/watchset_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/watchsets_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/helpers/application_helper.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/jobs/application_job.rb": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "app/mailers/application_mailer.rb": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "app/models/application_record.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/qualification.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/watchbill.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/watchbill_station_assignment.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/watchset.rb": {
+          "line": 98.33,
+          "branch": 85.71
+        },
+        "app/models/watchstation.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/worker.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/models/worker_qualification.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      }
+    },
+    {
+      "created_at": "2026-10-20T05:51:11Z",
+      "branch": "save_watchbills",
+      "commit": "b077e5cbf9667cc2934590a1efadc76bad9f636b",
+      "totals": {
+        "line": 97.43,
+        "branch": 96.42
+      },
+      "groups": {
+        "Controllers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Helpers": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "Jobs": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "Mailers": {
+          "line": 0.0,
+          "branch": 100.0
+        },
+        "Models": {
+          "line": 99.09,
+          "branch": 91.66
+        },
+        "Ungrouped": {
+          "line": 100.0,
+          "branch": 100.0
+        }
+      },
+      "files": {
+        "app/controllers/application_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/watchbills_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/controllers/watchsets_controller.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/application_grid.rb": {
+          "line": 100.0,
+          "branch": 100.0
+        },
+        "app/grids/watchbills_grid.rb": {
           "line": 100.0,
           "branch": 100.0
         },

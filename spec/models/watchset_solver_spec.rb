@@ -44,8 +44,9 @@ RSpec.describe "Watchset#generate_watchbill against the solver" do
       expect(WatchbillStationAssignment.count).to eq(0)
 
       assignments = watchbill.watchbill_station_assignments
-      expect(assignments).not_to be_empty
-      expect(assignments.size).to be <= station_count * WatchbillStationAssignment.shifts.size
+      # Every station is staffed on every shift.
+      expect(assignments.map { |a| [ a.watchstation, a.shift ] })
+        .to match_array(stations.product(WatchbillStationAssignment.shifts.keys))
 
       expect(assignments.map(&:watchstation)).to all(be_in(stations))
       expect(assignments.map(&:shift)).to all(be_in(WatchbillStationAssignment.shifts.keys))

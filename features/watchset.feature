@@ -22,3 +22,7 @@ Feature: Viewing a Watchset
     Then I should see 2 rows
     And I should see a row with "Fire Watch"
     And I should see a row with "Control Room Watch"
+    When I save the watchbill
+    Then I should see "Watchbill saved."
+    And I should see that the watchbill is valid
+    And I should see 2 rows

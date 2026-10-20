@@ -28,6 +28,11 @@
 
   <body>
     <main class="container-fluid flex">
+      <% { notice: "alert-success", error: "alert-danger" }.each do |type, css| %>
+        <% if flash[type] %>
+          <div class="alert <%= css %> flash-<%= type %>"><%= flash[type] %></div>
+        <% end %>
+      <% end %>
       <%= yield %>
     </main>
   </body>
