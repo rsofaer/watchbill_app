@@ -69,6 +69,7 @@ group :test do
   gem "cucumber-rails", "~> 4.1", require: false
   gem "database_cleaner"
   gem "rspec-expectations"
+  gem 'simplecov', require: false, group: :test
 end
 
 gem "datagrid", "~> 2.0"
