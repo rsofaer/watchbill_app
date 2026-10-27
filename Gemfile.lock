@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/taw/z3.git
-  revision: d60385ac6c7f9eb226d2738ae8b183be4f91f3a5
+  revision: e7e75582603dbc59e3e440cc5b70120338ad6ed1
   specs:
     z3 (0.0.20260727)
       ffi (~> 1.17)
